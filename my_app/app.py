@@ -11,6 +11,14 @@ def home():
 def Home_App():
     return render_template("imperius.html")
 
+@app.route("/cargar_image", methods = ['POST'])
+def cargar_image():
+    print("Hola mundo")
+
+    return "recibido"
+
+
+
 
 
 
