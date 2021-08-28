@@ -16,3 +16,6 @@
 
     3.- Es recomendable utilizar el Editor de text VsCode
 
+    4.- Para instalar las librerias ejecute el siguiente comando dentro de la carpeta my_app
+        pip install -r requeriments.txt 
+
