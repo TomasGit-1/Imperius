@@ -1,9 +1,9 @@
 from flask import Blueprint , render_template , request
 import os
 from Controller.utilities import cargaConfig , nameRandom
+from Api.Imagen import Imagen
 
 api_Imperius = Blueprint('api_Imperius' , __name__)
-
 configuration = cargaConfig()
 
 @api_Imperius.route("/")
@@ -21,7 +21,10 @@ def cargar_image():
     if request.method == "POST":
         file = request.files['file']
         try:
-            file.save(os.getcwd() + configuration["general"][0]["Imagenes"]+id+file.filename)
+            ruta_Img_Original = os.getcwd() + configuration["general"][0]["Imagenes"]+id+file.filename
+            file.save(ruta_Img_Original)
+            objImagen = Imagen()
+            objImagen.Escala_Grises(ruta_Img_Original)
             return "Imagen guardada"
         except FileNotFoundError:
             return "Folder no existe"
