@@ -18,4 +18,6 @@
 
     4.- Para instalar las librerias ejecute el siguiente comando dentro de la carpeta my_app
         pip install -r requeriments.txt 
-
+        
+# Documentacion de librerias utilizadas para el procesamiento de las imagenes
+    https://pillow.readthedocs.io/en/stable/
