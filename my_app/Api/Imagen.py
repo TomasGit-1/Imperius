@@ -4,7 +4,16 @@ import os
 import base64 
 
 class Imagen():
+    
     configuration = cargaConfig()
+    __registro = { "img_Orginal ":"" , "img_escala_grises":""}
+
+    def getImg_Original(self, ruta):
+        self.__registro["img_orginal"] = ruta
+
+    def setImg_Original(self):
+        return self.__registro["img_orginal"]
+    
     def Escala_Grises(self , ruta):
         try:
             id = nameRandom(5)
@@ -12,6 +21,7 @@ class Imagen():
             ruta_img_Original = os.getcwd() + self.configuration["general"][0]["Imagenes"]+id+".jpg"
             imgGray = img.convert('L')
             imgGray.save(ruta_img_Original)
+            self.__registro["img_escala_grises"] = ruta_img_Original
             image_64_encode = self.Base64(ruta_img_Original)
             return image_64_encode
         except Exception as e:
