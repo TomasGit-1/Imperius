@@ -26,7 +26,13 @@
                 </div>
                 <div class="container-fluid">
                     <div class="row">
-                        <div class="col bg-primary" style="height: 500px;">Vista previa de las imagenes</div>
+                        <div class="col " style="height: 500px;">
+                            Vista previa de las imagenes
+                            <div v-html="resultado_imagen" ></div>
+                            {{ resultado_imagen }}
+    
+                        
+                        </div>
                         <div class="col"  style="height: 500px;">
                             <template> 
                                 <div>
@@ -56,11 +62,6 @@
                                     detectar bordes
                                 </div>
                             </template>
-                            <div id="app">
-                                    RESPUESTA
-                                [[ info ]]
-                            </div>
-                        
                         </div>
                     </div>
                     <div class="row">
@@ -97,7 +98,8 @@
                     ],
                     imagenOriginal : null,
                     btnloadimage : false,
-                    info: ""
+                    info: "",
+                    resultado_imagen:null
                 
                 },
                 methods :{
@@ -129,7 +131,9 @@
                             url: urlapi,
                             data: bodyFormData,
                         }).then(function(response){
-                            that.info = response;
+                            that.resultado_imagen = response.data["img_Orginal"]
+                            console.log(that.resultado_imagen);
+
                         }).catch(function(error){
                             that.info = error;
                         });
