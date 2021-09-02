@@ -6,23 +6,28 @@ import base64
 class Imagen():
     
     configuration = cargaConfig()
-    __registro = { "img_Orginal ":"" , "img_escala_grises":""}
+    urls =["cargar_image" , "escala_grises"]
+    registro = []
 
-    def getImg_Original(self, ruta):
-        self.__registro["img_orginal"] = ruta
+    def setImg_Original(self, ruta):
+        self.registro = []
+        self.registro.append({self.urls[0]:ruta})
 
-    def setImg_Original(self):
-        return self.__registro["img_orginal"]
-    
+    def getImg_Original(self):
+        return self.registro[0][self.urls[0]]
+
+    def getRegistro(self):
+        return self.registro
+
     def Escala_Grises(self , ruta):
         try:
             id = nameRandom(5)
             img = Image.open(ruta)
-            ruta_img_Original = os.getcwd() + self.configuration["general"][0]["Imagenes"]+id+".jpg"
+            ruta_img_escala_grises = os.getcwd() + self.configuration["general"][0]["Imagenes"]+id+".jpg"
             imgGray = img.convert('L')
-            imgGray.save(ruta_img_Original)
-            self.__registro["img_escala_grises"] = ruta_img_Original
-            image_64_encode = self.Base64(ruta_img_Original)
+            imgGray.save(ruta_img_escala_grises)
+            self.registro.append({self.urls[1]:ruta_img_escala_grises})
+            image_64_encode = self.Base64(ruta_img_escala_grises)
             return image_64_encode
         except Exception as e:
             print(str(e))

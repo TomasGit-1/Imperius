@@ -22,11 +22,14 @@ def cargar_image():
     __ruta_Img_Original = ""
     id = nameRandom(5)
     if request.method == "POST":
-        file = request.files['file']
         try:
-            __ruta_Img_Original = os.getcwd() + configuration["general"][0]["Imagenes"]+id+file.filename
+            file = request.files['file']
+            __ruta_Img_Original = os.getcwd() + configuration["general"][0]["Imagenes"]
+            if not os.path.exists(__ruta_Img_Original):
+                os.mkdir(__ruta_Img_Original)
+            __ruta_Img_Original = __ruta_Img_Original + id+file.filename
             file.save(__ruta_Img_Original)
-            objImagen.getImg_Original(__ruta_Img_Original)
+            objImagen.setImg_Original(__ruta_Img_Original)
             image_64_encode = objImagen.Base64(__ruta_Img_Original)
             return {"img_Orginal" : image_64_encode}
         except FileNotFoundError:
@@ -37,7 +40,7 @@ def cargar_image():
 @api_Imperius.route("/escala_grises" , methods = ['POST'])
 def Escala_Grises():
     try:
-        __ruta_Img_Original = objImagen.setImg_Original()
+        __ruta_Img_Original = objImagen.getImg_Original()
         if __ruta_Img_Original != "":
             image_64_encode = objImagen.Escala_Grises(__ruta_Img_Original)
         else:

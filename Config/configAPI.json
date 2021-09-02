@@ -1,7 +1,7 @@
 {
     "general":[
         {
-            "Imagenes":"/images/"
+            "Imagenes":"/my_app/images/"
         }
     ]
 }

@@ -8,7 +8,7 @@ import string
 def cargaConfig():
     configuration = None
     try:
-        with open(os.getcwd() +"/my_app/Config/configAPI.json", "r" , encoding="utf-8") as f:
+        with open(os.getcwd()+"/Config/configAPI.json", "r" , encoding="utf-8") as f:
             configuration = json.loads(f.read())
             return configuration
     except  Exception as e:
