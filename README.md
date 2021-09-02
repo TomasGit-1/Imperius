@@ -14,6 +14,9 @@
         dentro del entorno creado ejecutar el comando 
         git clone https://github.com/TomasGit-1/Imperius.git
 
+        Dentro del repositorio clonarlo crear un segundo entorno dentro del primer entorno activado
+        
+
     3.- Es recomendable utilizar el Editor de text VsCode
 
     4.- Para instalar las librerias ejecute el siguiente comando dentro de la carpeta my_app

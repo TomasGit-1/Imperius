@@ -11,10 +11,10 @@ class Imagen():
 
     def setImg_Original(self, ruta):
         self.registro = []
-        self.registro.append({self.urls[0]:ruta})
+        self.registro.append([self.urls[0],ruta])
 
     def getImg_Original(self):
-        return self.registro[0][self.urls[0]]
+        return self.registro[0][1]
 
     def getRegistro(self):
         return self.registro
@@ -26,7 +26,7 @@ class Imagen():
             ruta_img_escala_grises = os.getcwd() + self.configuration["general"][0]["Imagenes"]+id+".jpg"
             imgGray = img.convert('L')
             imgGray.save(ruta_img_escala_grises)
-            self.registro.append({self.urls[1]:ruta_img_escala_grises})
+            self.registro.append([self.urls[1],ruta_img_escala_grises])
             image_64_encode = self.Base64(ruta_img_escala_grises)
             return image_64_encode
         except Exception as e:

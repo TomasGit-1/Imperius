@@ -31,7 +31,8 @@ def cargar_image():
             file.save(__ruta_Img_Original)
             objImagen.setImg_Original(__ruta_Img_Original)
             image_64_encode = objImagen.Base64(__ruta_Img_Original)
-            return {"img_Orginal" : image_64_encode}
+            registro = objImagen.getRegistro()
+            return {"img_Orginal" : image_64_encode ,"registro" : registro}
         except FileNotFoundError:
             return "Folder no existe"
         except Exception as e:
@@ -45,7 +46,9 @@ def Escala_Grises():
             image_64_encode = objImagen.Escala_Grises(__ruta_Img_Original)
         else:
             image_64_encode =""
-        return {"img_escala_grises" : image_64_encode}
+        
+        registro = objImagen.getRegistro()
+        return {"img_escala_grises" : image_64_encode , "registro" : registro}
     except Exception as e:
             print(str(e))
 

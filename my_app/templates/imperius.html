@@ -15,6 +15,8 @@
         <!-- Load the following for BootstrapVueIcons support -->
         <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue-icons.min.js"></script>
         <title>Hello, world!</title>
+        <style type="text/css">
+        </style>
     </head>
     <body>
         <main>
@@ -23,11 +25,18 @@
                     Aqui van los iconos de la aplicacion como guardar , run 
                 </div>
                 <div class="container-fluid">
+
+                    <!--***************Primera fila visualizacion y operadores**************-->
                     <div class="row">
+                        <!--Aqui se visualizaran los cambios de las imagenes-->
                         <div class="col " style="height: 500px;">
                             <h3>Vista previa de las imagenes</h3>
                             <div v-html="resultado_imagen" ></div>
                         </div>
+                        <!--Aqui se visualizaran los cambios de las imagenes-->
+                        
+                        <!--##########################################################-->
+                        <!--Aqui se visualizaran la lista de los operadores-->
                         <div class="col"  style="height: 500px;">
                             <template> 
                                 <div>
@@ -35,17 +44,16 @@
                                     <b-form-select v-model="seleccion" @change="editar(seleccion)"  :options="operadores" style="width:50%"></b-form-select>
                                 </div>
                             </template>
-                        
+                            
                             <template v-if="showList[0].value"> 
                                 <div>
-                                    <!-- Plain mode -->
-                                    <!--<b-form-file v-model="imagenOriginal" class="mt-3" plain @change="ImageLoad($event)"></b-form-file>-->
                                     <input type="file" accept=".png, .jpg" class="form-control-file mt-3" id="file" name="importfile" @change="ImageLoad($event)"/>
                                     <div class="mt-3">Imagen seleccionada : [[ imagenOriginal ? imagenOriginal.name : '' ]]</div>
                                     <button type="button" class="btn btn-success" v-on:click.prevent="funCargaImage" v-if="btnloadimage">Cargar</button>
-
+                                    
                                 </div>
                             </template>
+                            
                             <template v-if="showList[1].value"> 
                                 <div>
                                     <h3>Escala de grises</h3>
@@ -53,17 +61,38 @@
                                     <button type="button" class="btn btn-success" v-on:click.prevent="funEscalaGrises">Cargar</button>
                                 </div>
                             </template>
-
+                            
                             <template v-if="showList[2].value"> 
                                 <div>
                                     detectar bordes
                                 </div>
                             </template>
                         </div>
+                        <!--Aqui se visualizaran la lista de los operadores-->
+                        <!--##########################################################-->
                     </div>
+                    <!--***************Fin Primera fila visualizacion y operadores**************-->
+                    <!--***************Segunda fila pseudocodigo y variables**************-->
                     <div class="row">
+
                         <div class="col bg-success" style="height: 500px;">Aqui se veran las variables</div>
-                        <div class="col bg-warning" style="height: 500px;">Aqui el pseudocodigo</div>
+
+                        <div class="table-responsive col-7" style="height: 500px;">
+                            Aqui el pseudocodigo
+                                <table class="table table-hover table-bordered">  
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th scope="col">Operador</th>
+                                            <th scope="col">Valores</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="rows in registro">
+                                            <td v-for ="item in rows" > [[ item ]]</td>
+                                        </tr>
+                                    </tbody>
+                                </table>    
+                        </div>
                     </div>
                 </div>
             </section>
@@ -95,6 +124,7 @@
                 info: "",
                 resultado_imagen:null,
                 existe_original:false,
+                registro : []
             },
             methods :{
                 editar: function (x) {
@@ -114,6 +144,7 @@
                 },
                 funCargaImage(){
                     var that = this;
+                    that.registro = []
                     that.existe_original = false;
                     console.log("Inciamos la carga de imagen");
                     var bodyFormData = new FormData();
@@ -125,6 +156,8 @@
                         data: bodyFormData,
                     }).then(function(response){
                         that.resultado_imagen = response.data["img_Orginal"];
+                        that.registro = response.data["registro"];
+                        console.log(that.registro);
                         that.existe_original = true;
                     }).catch(function(error){
                         that.info = error;
@@ -141,6 +174,8 @@
                             url: urlapi,
                         }).then(function(response){
                             that.resultado_imagen = response.data["img_escala_grises"];
+                            that.registro = response.data["registro"];
+                            console.log(that.registro);
                             that.info = "";
                         }).catch(function(error){
                             that.info = error;
