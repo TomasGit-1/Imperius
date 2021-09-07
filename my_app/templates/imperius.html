@@ -5,9 +5,7 @@
         <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
         <!-- Bootstrap CSS -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
-        <!-- Load required Bootstrap and BootstrapVue CSS -->
-        <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">|        <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
         <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css" />
         <!-- Load Vue followed by BootstrapVue -->
         <!-- <script src="//unpkg.com/vue@latest/dist/vue.min.js"></script> -->
@@ -24,14 +22,14 @@
                 <div class="container-fluid bg-light text-center">
                     Aqui van los iconos de la aplicacion como guardar , run 
                 </div>
-                <div class="container-fluid">
+                <div class="container shadow p-3 mb-5 bg-light rounded " >
 
                     <!--***************Primera fila visualizacion y operadores**************-->
                     <div class="row">
                         <!--Aqui se visualizaran los cambios de las imagenes-->
-                        <div class="col " style="height: 500px;">
+                        <div class="container col-5 ">
                             <h3>Vista previa de las imagenes</h3>
-                            <div v-html="resultado_imagen" ></div>
+                            <div v-html="resultado_imagen" class= "col" ></div>
                         </div>
                         <!--Aqui se visualizaran los cambios de las imagenes-->
                         
@@ -39,28 +37,41 @@
                         <!--Aqui se visualizaran la lista de los operadores-->
                         <div class="col"  style="height: 500px;">
                             <template> 
-                                <div>
-                                    <h3>Busca el operador que deseas</h3>
-                                    <b-form-select v-model="seleccion" @change="editar(seleccion)"  :options="operadores" style="width:50%"></b-form-select>
+                                <div  class="mx-auto d-block  col-10">
+                                    <div class="alert alert-warning" role="alert" v-if = "showWarning">
+                                        [[info]]
+                                    </div>
+                                    <div class="alert alert-success" role="alert"  v-if = "showSuccess">
+                                        [[info]]
+                                    </div>
+                                    <div class="alert alert-danger" role="alert" v-if = "showDanger">
+                                        [[info]]
+                                    </div>
+                                    <h3 >Busca el operador que deseas</h3>
+                                    <b-form-select class="form-control " v-model="seleccion" @change="editar(seleccion)"  :options="operadores" ></b-form-select>
                                 </div>
                             </template>
+                            <div v-if="showList[0].value" class="mx-auto d-block col-10">
+                                <div> 
+                                    <div class="form-group">
+                                        <input type="file" accept=".png, .jpg" class="form-control mt-3 col" id="file" name="importfile" @change="ImageLoad($event)" />
+                                        <!-- <div class="mt-3">Imagen seleccionada : [[ imagenOriginal ? imagenOriginal.name : '' ]]</div> -->
+                                    </div>
+                                    <div class="form-group mt-3">
+                                        <label class="form-control-label h3" >Identificador </label>
+                                        <input type="text" class="form-control col"  placeholder="Identificador"  v-model="var_Original"/>
+                                    </div>
+                                    <button type="button" class="btn btn-success mt-3 col" v-on:click.prevent="funCargaImage" v-if="btnloadimage" >Cargar</button>
+                                </div> 
+                            </div>
+
                             
-                            <template v-if="showList[0].value"> 
-                                <div>
-                                    <input type="file" accept=".png, .jpg" class="form-control-file mt-3" id="file" name="importfile" @change="ImageLoad($event)"/>
-                                    <div class="mt-3">Imagen seleccionada : [[ imagenOriginal ? imagenOriginal.name : '' ]]</div>
-                                    <button type="button" class="btn btn-success" v-on:click.prevent="funCargaImage" v-if="btnloadimage">Cargar</button>
-                                    
+                            <div v-if="showList[1].value" class="mx-auto d-block col-10"> 
+                                <div class="mt-3">
+                                    <label class="form-control-label h3">Escala de grises</label>
+                                    <button type="button" class="btn btn-success mt-3 col" v-on:click.prevent="funEscalaGrises">Cargar</button>
                                 </div>
-                            </template>
-                            
-                            <template v-if="showList[1].value"> 
-                                <div>
-                                    <h3>Escala de grises</h3>
-                                    [[ info ]]
-                                    <button type="button" class="btn btn-success" v-on:click.prevent="funEscalaGrises">Cargar</button>
-                                </div>
-                            </template>
+                            </div>
                             
                             <template v-if="showList[2].value"> 
                                 <div>
@@ -97,9 +108,8 @@
                 </div>
             </section>
         </main>
-
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
         <script type="text/javascript">
@@ -110,6 +120,7 @@
                 message: 'Hello Vue!',
                 seleccion: null,
                 operadores:[
+                    { value: null, text: 'Selecciona un operador' },
                     { value: 0, text: 'cargar_imagen' },
                     { value: 1, text: 'escala_grises' },
                     { value: 2, text: 'detectar_bordes' },
@@ -124,7 +135,12 @@
                 info: "",
                 resultado_imagen:null,
                 existe_original:false,
-                registro : []
+                registro : [],
+                var_Original:"",
+                showDanger:false,
+                showSuccess:false,
+                showWarning:false,
+
             },
             methods :{
                 editar: function (x) {
@@ -138,30 +154,36 @@
                 ImageLoad(event) {
                     this.btnloadimage = false;
                     this.imagenOriginal = event.target.files[0];
-                    if (this.imagenOriginal != null){
+                    if (this.imagenOriginal != null ){
                         this.btnloadimage = true;
                     }
                 },
                 funCargaImage(){
                     var that = this;
-                    that.registro = []
-                    that.existe_original = false;
-                    console.log("Inciamos la carga de imagen");
-                    var bodyFormData = new FormData();
-                    bodyFormData.append('file',  that.imagenOriginal); 
-                    urlapi = "http://127.0.0.1:5000/cargar_image";
-                    axios({
-                        method: 'POST', 
-                        url: urlapi,
-                        data: bodyFormData,
-                    }).then(function(response){
-                        that.resultado_imagen = response.data["img_Orginal"];
-                        that.registro = response.data["registro"];
-                        console.log(that.registro);
-                        that.existe_original = true;
-                    }).catch(function(error){
-                        that.info = error;
-                    });
+                    console.log(that.var_Original);
+                    if (that.var_Original !=""){
+                        that.registro = []
+                        that.existe_original = false;
+                        console.log("Inciamos la carga de imagen");
+                        var bodyFormData = new FormData();
+                        bodyFormData.append('file',  that.imagenOriginal); 
+                        urlapi = "http://127.0.0.1:5000/cargar_image";
+                        axios({
+                            method: 'POST', 
+                            url: urlapi,
+                            data: bodyFormData,
+                        }).then(function(response){
+                            that.resultado_imagen = response.data["img_Orginal"];
+                            that.registro = response.data["registro"];
+                            console.log(that.registro);
+                            that.existe_original = true;
+                        }).catch(function(error){
+                            that.info = error;
+                        });
+                    }else{
+                        that.showWarning = true;
+                        that.info = "Escribe un identificador sin espacios de esta forma   identificador_uno ";
+                    }
                 },
                 funEscalaGrises(){
                     var that = this;
@@ -181,6 +203,7 @@
                             that.info = error;
                         });
                     }else{
+                        that.showWarning = true;
                         that.info = "No existe la imagen utilize el operador cargar imagen"
                     }
                 }

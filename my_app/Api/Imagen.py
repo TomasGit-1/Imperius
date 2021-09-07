@@ -37,7 +37,7 @@ class Imagen():
             image_64_encode =""
             with open(ruta, "rb") as image_file:
                 image_64_encode = base64.b64encode(image_file.read()).decode('utf-8')
-            image_64_encode = "<img src='data:image/png;base64,{}' class='img-fluid'>".format(image_64_encode)
+            image_64_encode = "<img src='data:image/png;base64,{}' class='img-thumbnail rounded mx-auto d-block' style='height:400px'>".format(image_64_encode)
             return image_64_encode
         except Exception as e:
             print(str(e))
