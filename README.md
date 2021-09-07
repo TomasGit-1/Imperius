@@ -24,3 +24,7 @@
         
 # Documentacion de librerias utilizadas para el procesamiento de las imagenes
     https://pillow.readthedocs.io/en/stable/
+
+
+# Documentacion del proyecto + calendario de actitvidades
+    https://docs.google.com/document/d/1A7PNkn4WV8ijNWrlu-3EsSrAD8T6hqtw/edit?usp=sharing&ouid=117800488039180460578&rtpof=true&sd=true
