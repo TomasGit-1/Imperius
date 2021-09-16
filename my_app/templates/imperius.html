@@ -68,7 +68,10 @@
                             
                             <div v-if="showList[1].value" class="mx-auto d-block col-10"> 
                                 <div class="mt-3">
-                                    <label class="form-control-label h3">Escala de grises</label>
+                                    <div class="form-group mt-3">
+                                        <label class="form-control-label h3" >Identificador </label>
+                                        <input type="text" class="form-control col"  placeholder="Identificador"  v-model="var_grises"/>
+                                    </div>
                                     <button type="button" class="btn btn-success mt-3 col" v-on:click.prevent="funEscalaGrises">Cargar</button>
                                 </div>
                             </div>
@@ -136,10 +139,11 @@
                 resultado_imagen:null,
                 existe_original:false,
                 registro : [],
-                var_Original:"",
                 showDanger:false,
                 showSuccess:false,
                 showWarning:false,
+                var_Original:"",
+                var_grises:""
 
             },
             methods :{
@@ -167,6 +171,7 @@
                         console.log("Inciamos la carga de imagen");
                         var bodyFormData = new FormData();
                         bodyFormData.append('file',  that.imagenOriginal); 
+                        bodyFormData.append('identificador' , that.var_Original);
                         urlapi = "http://127.0.0.1:5000/cargar_image";
                         axios({
                             method: 'POST', 
@@ -188,20 +193,29 @@
                 funEscalaGrises(){
                     var that = this;
                     if (that.existe_original){
-                        console.log("Inciamos la carga de imagen");
-                        var bodyFormData = new FormData();
-                        urlapi = "http://127.0.0.1:5000/escala_grises";
-                        axios({
-                            method: 'POST', 
-                            url: urlapi,
-                        }).then(function(response){
-                            that.resultado_imagen = response.data["img_escala_grises"];
-                            that.registro = response.data["registro"];
-                            console.log(that.registro);
-                            that.info = "";
-                        }).catch(function(error){
-                            that.info = error;
-                        });
+                        if (that.var_grises !=""){
+                            console.log(that.var_grises);
+                            console.log("Inciamos la carga de imagen");
+                            var bodyFormData = new FormData();
+                            bodyFormData.append('identificador' , that.var_grises);
+                            urlapi = "http://127.0.0.1:5000/escala_grises";
+                            axios({
+                                method: 'POST', 
+                                url: urlapi,
+                                data: bodyFormData,
+
+                            }).then(function(response){
+                                that.resultado_imagen = response.data["img_escala_grises"];
+                                that.registro = response.data["registro"];
+                                console.log(that.registro);
+                                that.info = "";
+                            }).catch(function(error){
+                                that.info = error;
+                            });
+                        }else{
+                            that.showWarning = true;
+                            that.info = "Escribe un identificador sin espacios de esta forma   identificador_uno ";
+                        }
                     }else{
                         that.showWarning = true;
                         that.info = "No existe la imagen utilize el operador cargar imagen"

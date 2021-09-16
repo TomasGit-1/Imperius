@@ -21,3 +21,22 @@ def nameRandom(number_of_strings):
     for x in range(number_of_strings):
         cadena = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(length_of_string))
     return cadena
+
+def CrearRegistro(rutafile,registro , operador ):
+    if not os.path.exists(rutafile):
+        os.mkdir(rutafile)
+    archivo = rutafile+"operadores"+".txt"
+
+    #Se agrega nombre del operador 
+    fs = open(archivo, 'a')
+    fs.write("operator:"+operador+"{")
+    fs.write("\n")
+    fs.close()
+
+    with open(archivo, "a") as archivoCreate:
+        for i in registro:
+            for key , item in i.items():
+                archivoCreate.write("\t %s %s" %(key , item))
+                archivoCreate.write("\n")
+        archivoCreate.write("}")
+        archivoCreate.write("\n")
