@@ -1,6 +1,6 @@
 from flask import Blueprint , render_template , request
 import os
-from Controller.utilities import cargaConfig , nameRandom , CrearRegistro
+from Controller.utilities import cargaConfig , nameRandom , CrearRegistro , ReadRegistro
 from Api.Imagen import Imagen
 
 api_Imperius = Blueprint('api_Imperius' , __name__)
@@ -43,7 +43,9 @@ def cargar_image():
 
             #Obtenemos el registros de los operadoresTxt
             registro = objImagen.getModelo()
-            CrearRegistro(os.getcwd() + configuration["general"][0]["OperadoresTxt"], registro , "cargar_image")
+            rutafile = CrearRegistro(os.getcwd() + configuration["general"][0]["OperadoresTxt"], registro , "cargar_image")
+            registro = ReadRegistro(rutafile)
+            
             return {"img_Orginal" : image_64_encode ,"registro" : registro}
         except FileNotFoundError:
             return "Folder no existe"
@@ -65,11 +67,12 @@ def Escala_Grises():
             objImagen.setIdentificador(var_EscalaGrises)
             objImagen.setMetodo("Escala_Grises")
             registro = objImagen.getModelo()
-            CrearRegistro(os.getcwd() + configuration["general"][0]["OperadoresTxt"], registro , "escala_grises")
+            rutafile = CrearRegistro(os.getcwd() + configuration["general"][0]["OperadoresTxt"], registro , "escala_grises")
+            registro = ReadRegistro(rutafile)
         else:
             image_64_encode =""
-        
-        registro = ""
+            registro = ""
+            
         return {"img_escala_grises" : image_64_encode , "registro" : registro}
     except Exception as e:
             print(str(e))

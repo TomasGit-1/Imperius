@@ -23,9 +23,10 @@ class Imagen():
     
     def getModelo(self):
         self.modelo.clear()
-        self.modelo.append({ "identificador" : ": "+self.identificador})
-        self.modelo.append({ "archivo" : ": "+self.ruta})
-        self.modelo.append({ "metodo" : ": "+self.metodo})
+        self.modelo.append({ "identificador" : ":"+self.identificador})
+        self.modelo.append({ "archivo" : ":"+self.ruta})
+        self.modelo.append({ "algoritmo" :":Ninguno"})
+        self.modelo.append({ "metodo" : ":"+self.metodo})
         return self.modelo
 
     def Escala_Grises(self , ruta):

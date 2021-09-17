@@ -29,7 +29,7 @@ def CrearRegistro(rutafile,registro , operador ):
 
     #Se agrega nombre del operador 
     fs = open(archivo, 'a')
-    fs.write("operator:"+operador+"{")
+    fs.write("operador:"+operador+"{")
     fs.write("\n")
     fs.close()
 
@@ -40,3 +40,26 @@ def CrearRegistro(rutafile,registro , operador ):
                 archivoCreate.write("\n")
         archivoCreate.write("}")
         archivoCreate.write("\n")
+
+    return archivo
+
+def ReadRegistro(archivo):
+    with open(archivo, "r") as archivoRead:
+        lineas = archivoRead.readlines()
+
+    listaFinal , listaTemp = [] , []
+    diccionario = {}
+    for i in lineas:
+        if "}" in i :
+            #Codigo para filtrar los peradores del txt
+            diccionario = {}
+            for y in listaTemp:
+                y = y.strip()
+                resultado = y.find(":")
+                diccionario[y[:resultado]] = y[resultado+1:]
+            listaFinal.append(diccionario)
+            listaTemp.clear()
+        else: 
+            listaTemp.append(i)
+
+    return listaFinal
