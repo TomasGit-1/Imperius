@@ -48,15 +48,15 @@ def ReadRegistro(archivo):
         lineas = archivoRead.readlines()
 
     listaFinal , listaTemp = [] , []
-    diccionario = {}
+    diccionario = []
     for i in lineas:
         if "}" in i :
             #Codigo para filtrar los peradores del txt
-            diccionario = {}
+            diccionario = []
             for y in listaTemp:
                 y = y.strip()
                 resultado = y.find(":")
-                diccionario[y[:resultado]] = y[resultado+1:]
+                diccionario.append( [y[:resultado] ,y[resultado+1:]])
             listaFinal.append(diccionario)
             listaTemp.clear()
         else: 

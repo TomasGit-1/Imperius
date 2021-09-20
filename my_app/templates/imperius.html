@@ -7,6 +7,7 @@
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">|        <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
         <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
         <!-- Load Vue followed by BootstrapVue -->
         <!-- <script src="//unpkg.com/vue@latest/dist/vue.min.js"></script> -->
         <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
@@ -88,9 +89,7 @@
                     <!--***************Fin Primera fila visualizacion y operadores**************-->
                     <!--***************Segunda fila pseudocodigo y variables**************-->
                     <div class="row">
-
                         <div class="col bg-success" style="height: 500px;">Aqui se veran las variables</div>
-
                         <div class="table-responsive col-7" style="height: 500px;">
                             Aqui el pseudocodigo
                                 <table class="table table-hover table-bordered">  
@@ -98,12 +97,19 @@
                                         <tr>
                                             <th scope="col">Operador</th>
                                             <th scope="col">Valores</th>
+                                            <th scope="col">Opciones</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr v-for="rows in registro">
-                                            <td v-for ="item in rows" > [[ item ]]</td>
+                                            <td v-for ="item in rows" style="white-space:pre"> <p>[[ item ]]</p></td>
+                                            <td>
+                                                <button class="btn btn-outline-primary"><i class="bi bi-plus-circle"></i></button>
+                                                <button class="btn btn-outline-secondary"><i class="bi bi-pen" ></i></button>
+                                                <button class="btn btn-outline-danger"><i class="bi bi-trash"></i></button>
+                                            </td>
                                         </tr>
+
                                     </tbody>
                                 </table>    
                         </div>
@@ -147,6 +153,39 @@
 
             },
             methods :{
+                filtrar(i){
+                    if(i.length >0){
+                        var array = [];
+                        var arrayFinal = [];
+                        var valores = "";
+                        var nameImage = "";
+                        var operador ="";
+                        for (var j = 0; j < i.length; j++){
+                            var vector = i[j];
+                            var ruta = vector[2][1];
+                            ruta = ruta.split("").reverse().join("");
+                            nameImage = "";
+                            for (var k = 0; k < ruta.length; k++){
+                                if ((ruta.charAt(k) == "/") || (ruta.charAt(k) =="//")){
+                                    break;
+                                }
+                                nameImage= nameImage + ruta.charAt(k);
+                            }
+                            nameImage = nameImage.split("").reverse().join("");
+                            operador = vector[0][1];
+                            operador = "\n\n"+operador.substring(0, (operador.length-1))
+                            valores ="{\n\t"+vector[1][0]+": "+vector[1][1]+"\n \t"
+                                        +vector[2][0]+": "+nameImage+"\n \t"
+                                        +vector[3][0]+": "+vector[3][1]+"\n \t"
+                                        +vector[4][0]+": "+vector[4][1]+"\n}";
+                            array.push(operador);
+                            array.push(valores);
+                            arrayFinal.push(array);
+                            array = [];
+                        }
+                        return arrayFinal;    
+                    }
+                },
                 editar: function (x) {
                     var that = this;
                     //Tenemos que poner false a todo de nuevo
@@ -164,11 +203,9 @@
                 },
                 funCargaImage(){
                     var that = this;
-                    console.log(that.var_Original);
                     if (that.var_Original !=""){
                         that.registro = []
                         that.existe_original = false;
-                        console.log("Inciamos la carga de imagen");
                         var bodyFormData = new FormData();
                         bodyFormData.append('file',  that.imagenOriginal); 
                         bodyFormData.append('identificador' , that.var_Original);
@@ -180,7 +217,7 @@
                         }).then(function(response){
                             that.resultado_imagen = response.data["img_Orginal"];
                             that.registro = response.data["registro"];
-                            console.log(that.registro);
+                            that.registro = that.filtrar(that.registro);
                             that.existe_original = true;
                         }).catch(function(error){
                             that.info = error;
@@ -194,8 +231,6 @@
                     var that = this;
                     if (that.existe_original){
                         if (that.var_grises !=""){
-                            console.log(that.var_grises);
-                            console.log("Inciamos la carga de imagen");
                             var bodyFormData = new FormData();
                             bodyFormData.append('identificador' , that.var_grises);
                             urlapi = "http://127.0.0.1:5000/escala_grises";
@@ -207,7 +242,8 @@
                             }).then(function(response){
                                 that.resultado_imagen = response.data["img_escala_grises"];
                                 that.registro = response.data["registro"];
-                                console.log(that.registro);
+                            that.registro = that.filtrar(that.registro);
+
                                 that.info = "";
                             }).catch(function(error){
                                 that.info = error;
