@@ -22,6 +22,7 @@
             <section id="app">
                 <div class="container-fluid bg-light text-center">
                     Aqui van los iconos de la aplicacion como guardar , run 
+                    <button class="btn btn-outline-danger" v-on:click.prevent="limpiarMemoria">Limpiar memoria</button>
                 </div>
                 <div class="container shadow p-3 mb-5 bg-light rounded " >
 
@@ -94,7 +95,8 @@
                             Aqui el pseudocodigo
                                 <table class="table table-hover table-bordered">  
                                     <thead class="thead-dark">
-                                        <tr>
+                                        <tr>     
+                                            <th scope="col">#</th>
                                             <th scope="col">Operador</th>
                                             <th scope="col">Valores</th>
                                             <th scope="col">Opciones</th>
@@ -104,9 +106,9 @@
                                         <tr v-for="rows in registro">
                                             <td v-for ="item in rows" style="white-space:pre"> <p>[[ item ]]</p></td>
                                             <td>
-                                                <button class="btn btn-outline-primary"><i class="bi bi-plus-circle"></i></button>
+                                                <button class="btn btn-outline-primary " ><i class="bi bi-plus-circle"></i></button>
                                                 <button class="btn btn-outline-secondary"><i class="bi bi-pen" ></i></button>
-                                                <button class="btn btn-outline-danger"><i class="bi bi-trash"></i></button>
+                                                <button class="btn btn-outline-danger" v-on:click="EliminarOperador(rows)" ><i class="bi bi-trash"></i></button>
                                             </td>
                                         </tr>
 
@@ -162,7 +164,7 @@
                         var operador ="";
                         for (var j = 0; j < i.length; j++){
                             var vector = i[j];
-                            var ruta = vector[2][1];
+                            var ruta = vector[1][1];
                             ruta = ruta.split("").reverse().join("");
                             nameImage = "";
                             for (var k = 0; k < ruta.length; k++){
@@ -172,12 +174,13 @@
                                 nameImage= nameImage + ruta.charAt(k);
                             }
                             nameImage = nameImage.split("").reverse().join("");
-                            operador = vector[0][1];
-                            operador = "\n\n"+operador.substring(0, (operador.length-1))
-                            valores ="{\n\t"+vector[1][0]+": "+vector[1][1]+"\n \t"
-                                        +vector[2][0]+": "+nameImage+"\n \t"
-                                        +vector[3][0]+": "+vector[3][1]+"\n \t"
-                                        +vector[4][0]+": "+vector[4][1]+"\n}";
+                            operador = vector[3][1];
+                            operador = "\n\n"+operador.substring(0, (operador.length));
+                            valores ="{\n\t"+vector[0][0]+": "+vector[0][1]+"\n \t"
+                            +vector[1][0]+": "+nameImage+"\n \t"
+                            +vector[2][0]+": "+vector[2][1]+"\n \t"
+                            +vector[3][0]+": "+vector[3][1]+"\n}";
+                            array.push("\n\n"+j);        
                             array.push(operador);
                             array.push(valores);
                             arrayFinal.push(array);
@@ -242,8 +245,7 @@
                             }).then(function(response){
                                 that.resultado_imagen = response.data["img_escala_grises"];
                                 that.registro = response.data["registro"];
-                            that.registro = that.filtrar(that.registro);
-
+                                that.registro = that.filtrar(that.registro);
                                 that.info = "";
                             }).catch(function(error){
                                 that.info = error;
@@ -256,6 +258,37 @@
                         that.showWarning = true;
                         that.info = "No existe la imagen utilize el operador cargar imagen"
                     }
+                },
+                limpiarMemoria(){
+                    var that = this;
+                    urlapi = "http://127.0.0.1:5000/limpiar_memoria";
+                    axios({
+                        method: 'POST', 
+                        url: urlapi
+                    }).then(function(response){
+                        that.registro = response.data["registro"];
+                        that.info = "";
+                    }).catch(function(error){
+                        that.info = error;
+                    });
+                }, 
+                EliminarOperador(x){
+                    var that = this;
+                    var bodyFormData = new FormData();
+                    bodyFormData.append('posicion' ,x[0]);
+                    urlapi = "http://127.0.0.1:5000/eliminar_operador";
+                    axios({
+                        method: 'POST', 
+                        url: urlapi,
+                        data: bodyFormData,
+                    }).then(function(response){
+                        that.registro = response.data["registro"];
+                        that.registro = that.filtrar(that.registro);
+                        that.info = "";
+
+                    }).catch(function(error){
+                        that.info = error;
+                    })
                 }
             
             }

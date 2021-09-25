@@ -6,28 +6,48 @@ import base64
 class Imagen():
     configuration = cargaConfig()
     urls =["cargar_image" , "escala_grises"]
-    ruta , metodo = "" , ""
+    ruta_original ,ruta , metodo = "" , "" , ""
     identificador=""
-    modelo =[]
+    modelo = []
+    modeloFinal = []
 
-    def setImg_ruta(self, ruta):
-        self.ruta = ruta
-    def getImg_ruta(self):
-        return self.ruta
-
-    def setIdentificador(self , identificador):
-        self.identificador = identificador
+    def setDatos (self , datos = []):
+        self.ruta = datos[0]
+        self.identificador = datos[1]
+        self.metodo = datos[2]
     
-    def setMetodo(self , metodo):
-        self.metodo = metodo
+    def setImg_ruta(self , ruta):
+        self.ruta_original = ruta
+
+    def getImg_ruta(self):
+        return self.ruta_original
+
+    def LimpiarMemoria(self):
+        self.modelo = []
+        self.identificador = []
+        self.ruta = []
+
+    def LimpiarModelo(self):
+        self.modeloFinal = []
+
+    def Eliminar(self , pos):
+        self.modeloFinal.pop(pos)
+        return self.modeloFinal
     
     def getModelo(self):
-        self.modelo.clear()
-        self.modelo.append({ "identificador" : ":"+self.identificador})
-        self.modelo.append({ "archivo" : ":"+self.ruta})
-        self.modelo.append({ "algoritmo" :":Ninguno"})
-        self.modelo.append({ "metodo" : ":"+self.metodo})
-        return self.modelo
+        try:
+            self.modelo.append([ "identificador",self.identificador])
+            self.modelo.append([ "archivo"      ,self.ruta])
+            self.modelo.append([ "algoritmo"    ,"Ninguno"])
+            self.modelo.append([ "metodo"       ,self.metodo])
+            return self.modelo
+        except Exception as e:
+            print (str(e))
+    
+    def getModeloFinal(self , datos):
+        self.modeloFinal.append(datos)
+        return self.modeloFinal
+
 
     def Escala_Grises(self , ruta):
         try:
