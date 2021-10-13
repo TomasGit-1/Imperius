@@ -5,7 +5,8 @@
         <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
         <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">|        <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+        <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
         <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css" />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
         <!-- Load Vue followed by BootstrapVue -->
@@ -14,15 +15,13 @@
         <!-- Load the following for BootstrapVueIcons support -->
         <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue-icons.min.js"></script>
         <title>Hello, world!</title>
-        <style type="text/css">
-        </style>
     </head>
-    <body>
+    <body style="background-color: rgba(0, 49, 82, 0.932);">
         <main>
             <section id="app">
-                <div class="container-fluid bg-light text-center">
-                    Aqui van los iconos de la aplicacion como guardar , run 
-                    <button class="btn btn-outline-danger" v-on:click.prevent="limpiarMemoria">Limpiar memoria</button>
+                <div class="container-fluid text-center" style="background-color: rgb(182, 182, 182);">
+
+
                 </div>
                 <div class="container shadow p-3 mb-5 bg-light rounded " >
 
@@ -49,41 +48,29 @@
                                     <div class="alert alert-danger" role="alert" v-if = "showDanger">
                                         [[info]]
                                     </div>
+                                    <button class="btn btn-outline-danger" v-on:click.prevent="limpiarMemoria">Limpiar memoria</button>
                                     <h3 >Busca el operador que deseas</h3>
                                     <b-form-select class="form-control " v-model="seleccion" @change="editar(seleccion)"  :options="operadores" ></b-form-select>
                                 </div>
                             </template>
-                            <div v-if="showList[0].value" class="mx-auto d-block col-10">
+                            
+                            <div class="mx-auto d-block col-10" v-if = "mostrarForm">
                                 <div> 
-                                    <div class="form-group">
+                                    <div class="form-group" v-if ="showList[1].value">
                                         <input type="file" accept=".png, .jpg" class="form-control mt-3 col" id="file" name="importfile" @change="ImageLoad($event)" />
-                                        <!-- <div class="mt-3">Imagen seleccionada : [[ imagenOriginal ? imagenOriginal.name : '' ]]</div> -->
                                     </div>
                                     <div class="form-group mt-3">
                                         <label class="form-control-label h3" >Identificador </label>
-                                        <input type="text" class="form-control col"  placeholder="Identificador"  v-model="var_Original"/>
+                                        <input type="text" class="form-control col"  placeholder="Identificador"  v-model="identificador" />
                                     </div>
-                                    <button type="button" class="btn btn-success mt-3 col" v-on:click.prevent="funCargaImage" v-if="btnloadimage" >Cargar</button>
+                                    <!--<input type="range" min="0" max="100" step="1" v-model="valueRg" @change="OperatorMenu(seleccion)" v-if ="showList[4].value" >-->
+                                    <button type="button" class="btn btn-success mt-3 col" v-on:click.prevent="OperatorMenu(seleccion)"  >Cargar</button>
                                 </div> 
                             </div>
+                            
 
-                            
-                            <div v-if="showList[1].value" class="mx-auto d-block col-10"> 
-                                <div class="mt-3">
-                                    <div class="form-group mt-3">
-                                        <label class="form-control-label h3" >Identificador </label>
-                                        <input type="text" class="form-control col"  placeholder="Identificador"  v-model="var_grises"/>
-                                    </div>
-                                    <button type="button" class="btn btn-success mt-3 col" v-on:click.prevent="funEscalaGrises">Cargar</button>
-                                </div>
-                            </div>
-                            
-                            <template v-if="showList[2].value"> 
-                                <div>
-                                    detectar bordes
-                                </div>
-                            </template>
                         </div>
+                        
                         <!--Aqui se visualizaran la lista de los operadores-->
                         <!--##########################################################-->
                     </div>
@@ -106,8 +93,8 @@
                                         <tr v-for="rows in registro">
                                             <td v-for ="item in rows" style="white-space:pre"> <p>[[ item ]]</p></td>
                                             <td>
-                                                <button class="btn btn-outline-primary " ><i class="bi bi-plus-circle"></i></button>
-                                                <button class="btn btn-outline-secondary"><i class="bi bi-pen" ></i></button>
+                                                <button class="btn btn-outline-primary" v-on:click="Agregar(rows)"><i class="bi bi-plus-circle"></i></button>
+                                                <button class="btn btn-outline-secondary"><i class="bi bi-pen"></i></button>
                                                 <button class="btn btn-outline-danger" v-on:click="EliminarOperador(rows)" ><i class="bi bi-trash"></i></button>
                                             </td>
                                         </tr>
@@ -118,6 +105,7 @@
                     </div>
                 </div>
             </section>
+            
         </main>
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
@@ -130,17 +118,14 @@
             data: {
                 message: 'Hello Vue!',
                 seleccion: null,
-                operadores:[
-                    { value: null, text: 'Selecciona un operador' },
-                    { value: 0, text: 'cargar_imagen' },
-                    { value: 1, text: 'escala_grises' },
-                    { value: 2, text: 'detectar_bordes' },
-                ],
-                showList:[
-                    { value: false, text: 'cargar_imagen' },
-                    { value: false, text: 'escala_grises' },
-                    { value: false, text: 'detectar_bordes' },
-                ],
+                operadores:[{
+                    value: null,
+                    text : "Seleccione una opcion"
+                }],
+                showList:[{
+                    value : false ,       
+                    text : "Seleccione una opcion"
+                }],
                 imagenOriginal : null,
                 btnloadimage : false,
                 info: "",
@@ -150,11 +135,78 @@
                 showDanger:false,
                 showSuccess:false,
                 showWarning:false,
-                var_Original:"",
-                var_grises:""
+                identificador:"",
+                var_grises:"",
+                opAgregar : false,
+                mostrarForm : false,
+                valueRg : 50
 
             },
+            mounted(){
+                // invocar los métodos
+                this.OperatorData();
+            },
             methods :{
+                cambio(){
+                    console.log("duhciusdh");
+                },
+                OperatorMenu(x){
+                    var that = this;
+                    var url ="";
+                    var opcion = x +1;
+                    switch (opcion) { 
+                        case 1:
+                            console.log("cargar imagen");
+                            url = "http://127.0.0.1:5000/cargar_image";
+                            that.funCargaImage(url);
+                            break 
+                        case 2: 
+                            console.log("escala de grises");
+                            url = "http://127.0.0.1:5000/escala_grises";
+                            that.operarImagen(url);
+                            break 
+                        case 3:
+                            url = "http://127.0.0.1:5000/detectar_bordes";
+                            that.operarImagen(url);
+                            break 
+                        case 4:
+                            url = "http://127.0.0.1:5000/blur";
+                            that.operarImagen(url);
+                            break 
+                        case 5: 
+                            break 
+                        case 6: 
+                            break 
+                        default: 
+                    }
+                    console.log("Listos para consultar el Api");
+                    console.log("Se presiona "+that.showList[x+1].text );
+
+                },
+                OperatorData: function () {
+                    var that = this;
+                    that.mostrarForm = that.showList[0].value;
+                    console.log("Entramos a esta funcion");
+                    urlapi = "http://127.0.0.1:5000/operators";
+                    axios({
+                        method: 'POST', 
+                        url: urlapi,
+                    }).then(function(response){
+                        var oper = response.data["operator"];
+                        for (let i = 0; i < oper.length; i++) {
+                            that.operadores.push({
+                                value: i, 
+                                text: oper[i], 
+                            });    
+                            that.showList.push({
+                                value: i, 
+                                text: oper[i] 
+                            });    
+                        }
+                    }).catch(function(error){
+                        that.info = error;
+                    });
+                },
                 filtrar(i){
                     if(i.length >0){
                         var array = [];
@@ -189,13 +241,22 @@
                         return arrayFinal;    
                     }
                 },
-                editar: function (x) {
+                
+                Agregar(){
                     var that = this;
+                    that.opAgregar = true; 
+                    that.showWarning = true;
+                    that.info = "Puedes ocupar este formulario para agregar un nuevo caacter ";
+                },
+                editar (x) {
+                    var that = this;
+                    that.identificador = "";
                     //Tenemos que poner false a todo de nuevo
                     for (var i = 0; i < that.showList.length; i++) {
                         that.showList[i].value = false;
                     }
-                    that.showList[x].value = true;
+                    that.showList[x+1].value = true;
+                    that.mostrarForm = that.showList[x+1].value;
                 },
                 ImageLoad(event) {
                     this.btnloadimage = false;
@@ -204,15 +265,15 @@
                         this.btnloadimage = true;
                     }
                 },
-                funCargaImage(){
+                funCargaImage(url){
                     var that = this;
-                    if (that.var_Original !=""){
+                    if (that.identificador !=""){
                         that.registro = []
                         that.existe_original = false;
                         var bodyFormData = new FormData();
                         bodyFormData.append('file',  that.imagenOriginal); 
-                        bodyFormData.append('identificador' , that.var_Original);
-                        urlapi = "http://127.0.0.1:5000/cargar_image";
+                        bodyFormData.append('identificador' , that.identificador);
+                        urlapi = url;
                         axios({
                             method: 'POST', 
                             url: urlapi,
@@ -230,20 +291,20 @@
                         that.info = "Escribe un identificador sin espacios de esta forma   identificador_uno ";
                     }
                 },
-                funEscalaGrises(){
+                operarImagen(url){
                     var that = this;
                     if (that.existe_original){
-                        if (that.var_grises !=""){
+                        if (that. identificador!=""){
                             var bodyFormData = new FormData();
-                            bodyFormData.append('identificador' , that.var_grises);
-                            urlapi = "http://127.0.0.1:5000/escala_grises";
+                            bodyFormData.append('identificador' , that.identificador);
+                            urlapi = url;
                             axios({
                                 method: 'POST', 
                                 url: urlapi,
                                 data: bodyFormData,
 
                             }).then(function(response){
-                                that.resultado_imagen = response.data["img_escala_grises"];
+                                that.resultado_imagen = response.data["imagen"];
                                 that.registro = response.data["registro"];
                                 that.registro = that.filtrar(that.registro);
                                 that.info = "";
@@ -289,10 +350,14 @@
                     }).catch(function(error){
                         that.info = error;
                     })
-                }
-            
+                },
+                AgregarAbajo(x){
+                    console.log("Aqui vamos agregar mas datos");
+                },
+                
+
             }
-        })
+        });
         </script>
     </body>
 </html>

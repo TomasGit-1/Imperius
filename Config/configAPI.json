@@ -2,7 +2,7 @@
     "general":[
         {
             "Imagenes":"/my_app/images/",
-            "OperadoresTxt" :"/my_app/filestxt/"
+            "OperadoresTxt" :"/my_app/filestxt/RegistroOperadores.txt"
 
         }
     ]

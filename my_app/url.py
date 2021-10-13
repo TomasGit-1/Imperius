@@ -1,6 +1,6 @@
 from flask import Blueprint , render_template , request
 import os
-from Controller.utilities import cargaConfig , nameRandom , CrearRegistro , ReadRegistro
+from Controller.utilities import cargaConfig , nameRandom , getOperator
 from Api.Imagen import Imagen
 
 
@@ -15,9 +15,24 @@ registro = []
 def home():
     return render_template("home.html")
 
+
 @api_Imperius.route("/imperius/")
 def Home_App():
     return render_template("imperius.html")
+
+@api_Imperius.route("/operators", methods = ['POST'])
+def operators():
+    if request.method == 'POST':
+        try:
+            route_file = os.getcwd() + configuration["general"][0]["OperadoresTxt"]
+            operator = getOperator(route_file)
+            return {"operator" : operator}
+        except FileNotFoundError:
+            return "Folder no existe"
+        except Exception as e:
+            print(str(e))
+
+
 
 @api_Imperius.route("/cargar_image", methods = ['POST'])
 def cargar_image():
@@ -68,18 +83,94 @@ def Escala_Grises():
             image_64_encode , ruta_escala_grises = objImagen.Escala_Grises(ruta_Img_Original)
             objImagen.LimpiarMemoria()
             #Enviamos los datos al clase para guardarlos
-            objImagen.setDatos([ruta_escala_grises , var_EscalaGrises , "Escala_Grises"])
+            objImagen.setDatos([ruta_escala_grises , var_EscalaGrises , "escala_grises"])
             #Obtenemos el modelo que vamos a mostar en la tabla
             datos = objImagen.getModelo()
 
             registro = objImagen.getModeloFinal(datos)
-            return {"img_escala_grises" : image_64_encode , "registro" : registro}
+            return {"imagen" : image_64_encode , "registro" : registro}
         else:
             image_64_encode =""
             registro = []            
-            return {"img_escala_grises" : image_64_encode , "registro" : registro}
+            return {"imagen" : image_64_encode , "registro" : registro}
     except Exception as e:
         print(str(e))
+
+@api_Imperius.route("/detectar_bordes" , methods = ['POST'])
+def Detectar_Bordes():
+    try:
+        ruta_Img_Original = objImagen.getImg_ruta()
+        idImg = ""
+        if request.method == "POST":
+            idImg = request.values['identificador']
+
+        if ruta_Img_Original != "":
+            image_64_encode , ruta_imag = objImagen.detectar_bordes(ruta_Img_Original)
+            objImagen.LimpiarMemoria()
+            #Enviamos los datos al clase para guardarlos
+            objImagen.setDatos([ruta_imag , idImg , "detectar_bordes"])
+            #Obtenemos el modelo que vamos a mostar en la tabla
+            datos = objImagen.getModelo()
+
+            registro = objImagen.getModeloFinal(datos)
+            return {"imagen" : image_64_encode , "registro" : registro}
+        else:
+            image_64_encode =""
+            registro = []            
+            return {"imagen" : image_64_encode , "registro" : registro}
+    except Exception as e:
+        print(str(e))
+
+@api_Imperius.route("/blur" , methods = ['POST'])
+def blur_Image():
+    try:
+        ruta_Img_Original = objImagen.getImg_ruta()
+        idImg = ""
+        if request.method == "POST":
+            idImg = request.values['identificador']
+
+        if ruta_Img_Original != "":
+            image_64_encode , ruta_imag = objImagen.blur_imagen(ruta_Img_Original)
+            objImagen.LimpiarMemoria()
+            #Enviamos los datos al clase para guardarlos
+            objImagen.setDatos([ruta_imag , idImg , "blur_imagen"])
+            #Obtenemos el modelo que vamos a mostar en la tabla
+            datos = objImagen.getModelo()
+
+            registro = objImagen.getModeloFinal(datos)
+            return {"imagen" : image_64_encode , "registro" : registro}
+        else:
+            image_64_encode =""
+            registro = []            
+            return {"imagen" : image_64_encode , "registro" : registro}
+    except Exception as e:
+        print(str(e))
+
+
+@api_Imperius.route("/rota_img" , methods = ['POST'])
+def rota_img():
+    try:
+        ruta_Img_Original = objImagen.getImg_ruta()
+        idImg = ""
+        if request.method == "POST":
+            idImg = request.values['identificador']
+        if ruta_Img_Original != "":
+            image_64_encode , ruta_imag = objImagen.rotar_imagen(ruta_Img_Original)
+            objImagen.LimpiarMemoria()
+            #Enviamos los datos al clase para guardarlos
+            objImagen.setDatos([ruta_imag , idImg , "rotar_imagen"])
+            #Obtenemos el modelo que vamos a mostar en la tabla
+            datos = objImagen.getModelo()
+
+            registro = objImagen.getModeloFinal(datos)
+            return {"imagen" : image_64_encode , "registro" : registro}
+        else:
+            image_64_encode =""
+            registro = []            
+            return {"imagen" : image_64_encode , "registro" : registro}
+    except Exception as e:
+        print(str(e))
+
 
 
 @api_Imperius.route("/limpiar_memoria" , methods = ['POST'])

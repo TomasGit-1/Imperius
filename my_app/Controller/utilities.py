@@ -63,3 +63,9 @@ def ReadRegistro(archivo):
             listaTemp.append(i)
 
     return listaFinal
+
+def getOperator(ruta):
+    file = []
+    with open(ruta , "r") as lines:
+        file = lines.readlines()
+    return file

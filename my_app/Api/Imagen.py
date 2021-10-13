@@ -1,4 +1,4 @@
-from PIL import Image
+from PIL import Image ,  ImageFilter
 from Controller.utilities import cargaConfig , nameRandom
 import os
 import base64 
@@ -58,6 +58,47 @@ class Imagen():
             imgGray.save(ruta_img_escala_grises)
             image_64_encode = self.Base64(ruta_img_escala_grises)
             return image_64_encode , ruta_img_escala_grises
+        except Exception as e:
+            print(str(e))
+
+    def detectar_bordes(self , ruta):
+        try:
+            id = nameRandom(5)
+            image = Image.open(ruta)
+            ruta_img = os.getcwd() + self.configuration["general"][0]["Imagenes"]+id+".jpg"
+            image = image.convert("L")
+            image = image.filter(ImageFilter.FIND_EDGES)
+            image.save(ruta_img)
+            image_64_encode = self.Base64(ruta_img)
+            return image_64_encode , ruta_img
+        except Exception as e:
+            print(str(e))
+
+    def rotar_imagen(self , ruta):
+        try:
+            id = nameRandom(5)
+            image = Image.open(ruta)
+            ruta_img = os.getcwd() + self.configuration["general"][0]["Imagenes"]+id+".jpg"
+            image = image.rotate(180) 
+            image.save(ruta_img)
+            image_64_encode = self.Base64(ruta_img)
+            return image_64_encode , ruta_img
+        except Exception as e:
+            print(str(e))
+
+    def blur_imagen(self , ruta):
+        try:
+            id = nameRandom(5)
+            image = Image.open(ruta)
+            ruta_img = os.getcwd() + self.configuration["general"][0]["Imagenes"]+id+".jpg"
+            # Abra un archivo de imagen jpg, tenga en cuenta la ruta actual:
+            image = Image.open(ruta)
+            # Aplicar filtro de desenfoque:
+            image = image.filter(ImageFilter.BLUR)
+            image.save(ruta_img)
+
+            image_64_encode = self.Base64(ruta_img)
+            return image_64_encode , ruta_img
         except Exception as e:
             print(str(e))
 
