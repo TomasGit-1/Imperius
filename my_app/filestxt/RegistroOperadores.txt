@@ -1,0 +1,15 @@
+Cargar_Imagen 
+Escala_Grises
+Blur
+Bilateral_Filter
+Box_Filter
+Dilate
+Erode
+
+
+filter2D
+GaussianBlur
+Laplacian
+medianBlur
+sobel
+

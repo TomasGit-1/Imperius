@@ -14,6 +14,7 @@
         <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
         <!-- Load the following for BootstrapVueIcons support -->
         <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue-icons.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <title>Hello, world!</title>
     </head>
     <body style="background-color: rgba(0, 49, 82, 0.932);">
@@ -62,6 +63,9 @@
                                     <div class="form-group mt-3">
                                         <label class="form-control-label h3" >Identificador </label>
                                         <input type="text" class="form-control col"  placeholder="Identificador"  v-model="identificador" />
+                                    </div>
+                                    <div class="inputsGenerate form-group">
+                                    
                                     </div>
                                     <!--<input type="range" min="0" max="100" step="1" v-model="valueRg" @change="OperatorMenu(seleccion)" v-if ="showList[4].value" >-->
                                     <button type="button" class="btn btn-success mt-3 col" v-on:click.prevent="OperatorMenu(seleccion)"  >Cargar</button>
@@ -173,7 +177,15 @@
                             url = "http://127.0.0.1:5000/blur";
                             that.operarImagen(url);
                             break 
-                        case 5: 
+                        case 5:
+                            /*
+                                bilateralFilter
+                                0 -> Identificador
+                                1 -> posicion 
+                                2..->data
+                            */
+                            url = "http://127.0.0.1:5000/FiltrosGr";
+                            that.operarImagen2(url, ["ide",5 ,15 , 12 ])
                             break 
                         case 6: 
                             break 
@@ -257,6 +269,17 @@
                     }
                     that.showList[x+1].value = true;
                     that.mostrarForm = that.showList[x+1].value;
+                    $(document).ready(function() {
+                        $('input').remove();
+                        $('h4').remove();
+                        $('br').remove();
+                        var wrapper = $(".inputsGenerate"); //Fields wrapper
+                        // muestra en la consola 'intento 0', 'intento 1', ..., 'intento 4'
+                        for (var i=0; i<5; i++) {
+                        $(wrapper).append('<h4 style="display:inline;">'+i+' </h4> <input type="text" name="mytext[]" style ="display:inline;"/> <br> ');
+                            console.log('intento ' + i);
+                        }
+                    });
                 },
                 ImageLoad(event) {
                     this.btnloadimage = false;
@@ -297,6 +320,35 @@
                         if (that. identificador!=""){
                             var bodyFormData = new FormData();
                             bodyFormData.append('identificador' , that.identificador);
+                            urlapi = url;
+                            axios({
+                                method: 'POST', 
+                                url: urlapi,
+                                data: bodyFormData,
+
+                            }).then(function(response){
+                                that.resultado_imagen = response.data["imagen"];
+                                that.registro = response.data["registro"];
+                                that.registro = that.filtrar(that.registro);
+                                that.info = "";
+                            }).catch(function(error){
+                                that.info = error;
+                            });
+                        }else{
+                            that.showWarning = true;
+                            that.info = "Escribe un identificador sin espacios de esta forma   identificador_uno ";
+                        }
+                    }else{
+                        that.showWarning = true;
+                        that.info = "No existe la imagen utilize el operador cargar imagen"
+                    }
+                },
+                operarImagen2(url , data ){
+                    var that = this;
+                    if (that.existe_original){
+                        if (that. identificador!=""){
+                            var bodyFormData = new FormData();
+                            bodyFormData.append('data' , data);
                             urlapi = url;
                             axios({
                                 method: 'POST', 
