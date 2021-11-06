@@ -24,12 +24,22 @@
 
 
                 </div>
-                <div class="container shadow p-3 mb-5 bg-light rounded " >
+                <template>
+                    <div>
+                        <b-button v-b-toggle.sidebar-variant  class="mt-2 ml-5">Opciones</b-button>
+                        <b-sidebar id="sidebar-variant" title="Mas opciones" bg-variant="dark" text-variant="light" shadow>
+                            <div class="px-3 py-2">
+                                <button class="btn btn-outline-danger" v-on:click.prevent="limpiarMemoria">Limpiar memoria</button>
+                            </div>
+                        </b-sidebar>
+                    </div>
+                </template>
+                <div class="container shadow p-3 mb-5 bg-light rounded mt-4 " >
 
                     <!--***************Primera fila visualizacion y operadores**************-->
-                    <div class="row">
+                    <div class="row mb-2">
                         <!--Aqui se visualizaran los cambios de las imagenes-->
-                        <div class="container col-5 ">
+                        <div class="container col border border-secondary mr-1 ">
                             <h3>Vista previa de las imagenes</h3>
                             <div v-html="resultado_imagen" class= "col" ></div>
                         </div>
@@ -37,9 +47,9 @@
                         
                         <!--##########################################################-->
                         <!--Aqui se visualizaran la lista de los operadores-->
-                        <div class="col"  style="height: 500px;">
+                        <div class="col-7 border border-secondary"  style="height: 500px;">
                             <template> 
-                                <div  class="mx-auto d-block  col-10">
+                                <div  class="mx-auto d-block  col">
                                     <div class="alert alert-warning" role="alert" v-if = "showWarning">
                                         [[info]]
                                     </div>
@@ -49,13 +59,12 @@
                                     <div class="alert alert-danger" role="alert" v-if = "showDanger">
                                         [[info]]
                                     </div>
-                                    <button class="btn btn-outline-danger" v-on:click.prevent="limpiarMemoria">Limpiar memoria</button>
                                     <h3 >Busca el operador que deseas</h3>
                                     <b-form-select class="form-control " v-model="seleccion" @change="editar(seleccion)"  :options="operadores" ></b-form-select>
                                 </div>
                             </template>
                             
-                            <div class="mx-auto d-block col-10" v-if = "mostrarForm">
+                            <div class="mx-auto d-block col" v-if = "mostrarForm">
                                 <div> 
                                     <div class="form-group" v-if ="showList[1].value">
                                         <input type="file" accept=".png, .jpg" class="form-control mt-3 col" id="file" name="importfile" @change="ImageLoad($event)" />
@@ -80,9 +89,11 @@
                     </div>
                     <!--***************Fin Primera fila visualizacion y operadores**************-->
                     <!--***************Segunda fila pseudocodigo y variables**************-->
-                    <div class="row">
-                        <div class="col bg-success" style="height: 500px;">Aqui se veran las variables</div>
-                        <div class="table-responsive col-7" style="height: 500px;">
+                    <div class="row ">
+                        <div class="col  border border-secondary mr-1 " style="height: 500px;">
+                        
+                        </div>
+                        <div class="table-responsive col-7 border border-secondary mr-1 " style="height: 500px;">
                             Aqui el pseudocodigo
                                 <table class="table table-hover table-bordered">  
                                     <thead class="thead-dark">
@@ -156,44 +167,10 @@
                 },
                 OperatorMenu(x){
                     var that = this;
-                    var url ="";
-                    var opcion = x +1;
-                    switch (opcion) { 
-                        case 1:
-                            console.log("cargar imagen");
-                            url = "http://127.0.0.1:5000/cargar_image";
-                            that.funCargaImage(url);
-                            break 
-                        case 2: 
-                            console.log("escala de grises");
-                            url = "http://127.0.0.1:5000/escala_grises";
-                            that.operarImagen(url);
-                            break 
-                        case 3:
-                            url = "http://127.0.0.1:5000/detectar_bordes";
-                            that.operarImagen(url);
-                            break 
-                        case 4:
-                            url = "http://127.0.0.1:5000/blur";
-                            that.operarImagen(url);
-                            break 
-                        case 5:
-                            /*
-                                bilateralFilter
-                                0 -> Identificador
-                                1 -> posicion 
-                                2..->data
-                            */
-                            url = "http://127.0.0.1:5000/FiltrosGr";
-                            that.operarImagen2(url, ["ide",5 ,15 , 12 ])
-                            break 
-                        case 6: 
-                            break 
-                        default: 
-                    }
-                    console.log("Listos para consultar el Api");
-                    console.log("Se presiona "+that.showList[x+1].text );
-
+                    var url ="";                    
+                    console.log("cargar imagen");
+                    url = "http://127.0.0.1:5000/cargar_image";
+                    that.funCargaImage(url);
                 },
                 OperatorData: function () {
                     var that = this;
@@ -205,6 +182,7 @@
                         url: urlapi,
                     }).then(function(response){
                         var oper = response.data["operator"];
+                        console.log(oper);
                         for (let i = 0; i < oper.length; i++) {
                             that.operadores.push({
                                 value: i, 
@@ -220,6 +198,9 @@
                     });
                 },
                 filtrar(i){
+                    /*Esta funcion se encarga de filtrar los datos de la tabla por el momento ya esta funcionando
+                        Iportante no mover nada
+                    */
                     if(i.length >0){
                         var array = [];
                         var arrayFinal = [];
@@ -232,7 +213,7 @@
                             ruta = ruta.split("").reverse().join("");
                             nameImage = "";
                             for (var k = 0; k < ruta.length; k++){
-                                if ((ruta.charAt(k) == "/") || (ruta.charAt(k) =="//")){
+                                if ((ruta.charAt(k) == "/") || (ruta.charAt(k) =="//") || (ruta.charAt(k) =="\\") ){
                                     break;
                                 }
                                 nameImage= nameImage + ruta.charAt(k);
@@ -253,14 +234,10 @@
                         return arrayFinal;    
                     }
                 },
-                
-                Agregar(){
-                    var that = this;
-                    that.opAgregar = true; 
-                    that.showWarning = true;
-                    that.info = "Puedes ocupar este formulario para agregar un nuevo caacter ";
-                },
                 editar (x) {
+                    /**
+                     * Esta funcion genera la interfaz aleatoriamento
+                    */
                     var that = this;
                     that.identificador = "";
                     //Tenemos que poner false a todo de nuevo
@@ -269,17 +246,17 @@
                     }
                     that.showList[x+1].value = true;
                     that.mostrarForm = that.showList[x+1].value;
-                    $(document).ready(function() {
-                        $('input').remove();
-                        $('h4').remove();
-                        $('br').remove();
-                        var wrapper = $(".inputsGenerate"); //Fields wrapper
-                        // muestra en la consola 'intento 0', 'intento 1', ..., 'intento 4'
-                        for (var i=0; i<5; i++) {
-                        $(wrapper).append('<h4 style="display:inline;">'+i+' </h4> <input type="text" name="mytext[]" style ="display:inline;"/> <br> ');
-                            console.log('intento ' + i);
-                        }
-                    });
+                    // $(document).ready(function() {
+                    //     $('input').remove();
+                    //     $('h4').remove();
+                    //     $('br').remove();
+                    //     var wrapper = $(".inputsGenerate"); //Fields wrapper
+                    //     // muestra en la consola 'intento 0', 'intento 1', ..., 'intento 4'
+                    //     for (var i=0; i<5; i++) {
+                    //     $(wrapper).append('<h4 style="display:inline;">'+i+' </h4> <input type="text" name="mytext[]" style ="display:inline;"/> <br> ');
+                    //         console.log('intento ' + i);
+                    //     }
+                    // });
                 },
                 ImageLoad(event) {
                     this.btnloadimage = false;
@@ -314,36 +291,7 @@
                         that.info = "Escribe un identificador sin espacios de esta forma   identificador_uno ";
                     }
                 },
-                operarImagen(url){
-                    var that = this;
-                    if (that.existe_original){
-                        if (that. identificador!=""){
-                            var bodyFormData = new FormData();
-                            bodyFormData.append('identificador' , that.identificador);
-                            urlapi = url;
-                            axios({
-                                method: 'POST', 
-                                url: urlapi,
-                                data: bodyFormData,
-
-                            }).then(function(response){
-                                that.resultado_imagen = response.data["imagen"];
-                                that.registro = response.data["registro"];
-                                that.registro = that.filtrar(that.registro);
-                                that.info = "";
-                            }).catch(function(error){
-                                that.info = error;
-                            });
-                        }else{
-                            that.showWarning = true;
-                            that.info = "Escribe un identificador sin espacios de esta forma   identificador_uno ";
-                        }
-                    }else{
-                        that.showWarning = true;
-                        that.info = "No existe la imagen utilize el operador cargar imagen"
-                    }
-                },
-                operarImagen2(url , data ){
+                operarImagen(url , data=[] ){
                     var that = this;
                     if (that.existe_original){
                         if (that. identificador!=""){
@@ -403,11 +351,6 @@
                         that.info = error;
                     })
                 },
-                AgregarAbajo(x){
-                    console.log("Aqui vamos agregar mas datos");
-                },
-                
-
             }
         });
         </script>

@@ -5,11 +5,8 @@ Bilateral_Filter
 Box_Filter
 Dilate
 Erode
-
-
-filter2D
+Filter2D
 GaussianBlur
 Laplacian
-medianBlur
-sobel
-
+MedianBlur
+Sobel
