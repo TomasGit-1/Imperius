@@ -86,6 +86,9 @@ class Imagen():
         except Exception as e:
             print(str(e))
 
+    #================================================#
+    #                   Blur                         #
+    #================================================#
     def Blur(self , ruta):
         try:
             #ksize puede tomar diferentes valores ksize = (30 , 30)
@@ -98,11 +101,11 @@ class Imagen():
         except Exception as e:
             print(str(e))
 
+    #================================================#
+    #                   bilateralFilter              #
+    #================================================#
     def Bilateral_Filter(self, data=[]):
         img = self.ImagenRead(self.getImg_ruta())
-        #================================================#
-        #                   bilateralFilter              #
-        #================================================#
         # d , sigma_space , sigma_color
         # Apply bilateral filter with d = 15,
         # sigmaColor = sigmaSpace = 75.
@@ -114,36 +117,106 @@ class Imagen():
         image_64_encode , ruta_img = self.ImagenWrite(image)
         return image_64_encode , ruta_img
     
+    #================================================#
+    #                   BoxFilter                    #
+    #================================================#
     def Box_Filter(self, data=[]):
         img = self.ImagenRead(self.getImg_ruta())
-        #================================================#
-        #                   BoxFilter                    #
-        #================================================#
         ksize = (10, 10)
         # boxFilter(src, dst, ddepth, ksize, anchor, normalize, borderType)
         image = cv2.boxFilter(img ,-1, ksize)
         image_64_encode , ruta_img = self.ImagenWrite(image)
         return image_64_encode , ruta_img
 
+    #================================================#
+    #                   Dilate                       #
+    #================================================#
     def Dilate(self, data=[]):
         img = self.ImagenRead(self.getImg_ruta())
-        #================================================#
-        #                   Dilate                       #
-        #================================================#
         kernel = np.ones((5, 5), 'uint8')
         image = cv2.dilate(img, kernel, iterations=1)        
         image_64_encode , ruta_img = self.ImagenWrite(image)
         return image_64_encode , ruta_img
 
+    #================================================#
+    #                   Erode                        #
+    #================================================#
     def Erode(self, data=[]):
         img = self.ImagenRead(self.getImg_ruta())
-        #================================================#
-        #                   BoxFilter                    #
-        #================================================#
         kernel = np.ones((5, 5), 'uint8')
         image = cv2.Erode(img,  kernel, iterations=1)
         image_64_encode , ruta_img = self.ImagenWrite(image)
         return image_64_encode , ruta_img
+
+    #================================================#
+    #                   filter2D                     #
+    #================================================#
+    def Filter2D(self, data=[]):
+        img = self.ImagenRead(self.getImg_ruta())
+        kernel = np.ones((5, 5), 'uint8')
+
+        kernel = np.array([
+            [0, -1, 0],
+            [-1, 5, -1],
+            [0, -1, 0]
+        ])
+
+        image = cv2.filter2D(img, cv2.CV_64F,kernel)
+
+        image_64_encode , ruta_img = self.ImagenWrite(image)
+        return image_64_encode , ruta_img
+
+    #================================================#
+    #                   GaussianBlur                 #
+    #================================================#
+    def GaussianBlur(self, data=[]):
+        img = self.ImagenRead(self.getImg_ruta())
+        kernel = np.ones((5, 5), 'uint8')
+        image = cv2.GaussianBlur(img, kernel , cv2.BORDER_DEFAULT)
+        image_64_encode , ruta_img = self.ImagenWrite(image)
+        return image_64_encode , ruta_img
+
+    
+    #================================================#
+    #                   Laplacian                    #
+    #================================================#
+    def Laplacian(self, data=[]):
+        img = self.ImagenRead(self.getImg_ruta())
+        image = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        image = cv2.Laplacian(image,cv2.CV_64F ,  cv2.BORDER_DEFAULT)
+        image_64_encode , ruta_img = self.ImagenWrite(image)
+        return image_64_encode , ruta_img
+
+    #================================================#
+    #                   MedianBlur                   #
+    #================================================#
+    def MedianBlur(self, data=[]):
+        img = self.ImagenRead(self.getImg_ruta())
+        # Numeros impares 
+        image = cv2.medianBlur(img,9)
+        image_64_encode , ruta_img = self.ImagenWrite(image)
+        return image_64_encode , ruta_img
+
+    #================================================#
+    #                   Sobel                        #
+    #================================================#
+    def Sobel(self, data=[]):
+        img = self.ImagenRead(self.getImg_ruta())
+        # Numeros impares 
+        # Calculation of Sobelx
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+        x = cv2.Sobel(gray, cv2.CV_64F, 1,0, ksize=3, scale=1)
+        y = cv2.Sobel(gray, cv2.CV_64F, 0,1, ksize=3, scale=1)
+
+        absx= cv2.convertScaleAbs(x)
+        absy = cv2.convertScaleAbs(y)
+        image = cv2.addWeighted(absx, 0.5, absy, 0.5,0)
+        image_64_encode , ruta_img = self.ImagenWrite(image)
+        return image_64_encode , ruta_img
+    
+
+
 
 
 

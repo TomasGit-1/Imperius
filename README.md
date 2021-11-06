@@ -19,12 +19,14 @@
 
     3.- Es recomendable utilizar el Editor de text VsCode
 
-    4.- Para instalar las librerias ejecute el siguiente comando dentro de la carpeta my_app
+    4.- Para instalar las librerias ejecute el siguiente comando dentro de la carpeta my_app/resources
+
         pip install -r requeriments.txt 
         
 # Documentacion de librerias utilizadas para el procesamiento de las imagenes
     https://pillow.readthedocs.io/en/stable/
-
+    https://docs.opencv.org/4.5.3/d4/d86/group__imgproc__filter.html
 
 # Documentacion del proyecto + calendario de actitvidades
     https://docs.google.com/document/d/1A7PNkn4WV8ijNWrlu-3EsSrAD8T6hqtw/edit?usp=sharing&ouid=117800488039180460578&rtpof=true&sd=true
+
