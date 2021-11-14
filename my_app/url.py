@@ -113,6 +113,9 @@ def Eliminar_Operador():
 
     return { "registro" : registro}
 
+
+
+
 #Podria servir No borrar por el momento
 #Muchas horas de trabajo
 

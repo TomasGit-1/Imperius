@@ -183,7 +183,7 @@ class Imagen():
     def Laplacian(self, data=[]):
         img = self.ImagenRead(self.getImg_ruta())
         image = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        image = cv2.Laplacian(image,cv2.CV_64F ,  cv2.BORDER_DEFAULT)
+        image = cv2.Laplacian(image,cv2.CV_64F ,cv2.BORDER_DEFAULT)
         image_64_encode , ruta_img = self.ImagenWrite(image)
         return image_64_encode , ruta_img
 
@@ -202,6 +202,7 @@ class Imagen():
     #================================================#
     def Sobel(self, data=[]):
         img = self.ImagenRead(self.getImg_ruta())
+        
         # Numeros impares 
         # Calculation of Sobelx
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -212,9 +213,38 @@ class Imagen():
         absx= cv2.convertScaleAbs(x)
         absy = cv2.convertScaleAbs(y)
         image = cv2.addWeighted(absx, 0.5, absy, 0.5,0)
+        
         image_64_encode , ruta_img = self.ImagenWrite(image)
         return image_64_encode , ruta_img
     
+
+    #def Filtros(self , data=[]):
+
+    #Nombre de la funcion(operador)
+    #Parametros (tIPOS DE DATOS)
+    #Codigo de la funcion
+
+    #def filtro50([parametros]):
+        #print("Hola mundo")
+        #print("Aqui porceso la imagen")
+
+
+        #     precio = 5
+# cadenas = ['(4+5)**2',
+#            '(1, 2, 3)',
+#            '["I", "II", "III"]',
+#            '{"a":1, "b":2, "c":3}',
+#            'len("Python")',
+#            '20 * precio',
+#            '__import__("platform").python_version()']
+
+# for cadena in cadenas:
+#     print(cadena, "=>", eval(cadena), 
+#           "Tipo:",type(eval(cadena)))
+
+
+
+
 
 
 

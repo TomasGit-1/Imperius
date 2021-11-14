@@ -30,3 +30,12 @@
 # Documentacion del proyecto + calendario de actitvidades
     https://docs.google.com/document/d/1A7PNkn4WV8ijNWrlu-3EsSrAD8T6hqtw/edit?usp=sharing&ouid=117800488039180460578&rtpof=true&sd=true
 
+
+# Para se tiene problemas al comparar el String del txt con el codigo
+    if(array[i+1] == 'input'){
+        console.log('Entro a la condicion 1 ')
+        $(wrapper).append('<div id="content"> <h4 style="display:inline;">'+i+' </h4>  <input type='+array[i+1]+' name="mytext[]" style ="display:inline;"/> <br> </div>');
+    }
+    Se decide apllicar un id a cada compontente 
+    0 == input
+    1 == select o b-form-select
