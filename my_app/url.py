@@ -42,7 +42,10 @@ def cargar_image():
         try:
             #Obtenemos los datos de la interfaz
             file = request.files['file']
-            identificador = request.values['identificador']
+            operador = request.values['operador']
+            data = request.values['data']
+            data = data.split(',')
+            identificador =data[1]
             ruta_Img_Original = os.getcwd() + configuration["general"][0]["Imagenes"]
 
             #Creamos la carpeta para las imagenes
@@ -56,7 +59,7 @@ def cargar_image():
             
             #Enviamos los datos al clase para guardarlos
             #ruta , identificador , operador
-            objImagen.setDatos([ruta_Img_Original , identificador , "cargar_image"])
+            objImagen.setDatos([ruta_Img_Original , identificador , operador])
             objImagen.setImg_ruta(ruta_Img_Original)
             
             #Generamos la imagen en base64 para retornarla y pintar
@@ -76,24 +79,33 @@ def cargar_image():
 @api_Imperius.route("/Api/Operadores" , methods = ['POST'])
 def operadores():
     #Obtenemos los datos de la interfaz
-    identificador = request.values['identificador']
+    #Obtenemos los datos de la interfaz
+    file = request.files['file']
     operador = request.values['operador']
-    data = ast.literal_eval(request.values['data'])
+    data = request.values['data']
+    data = data.split(',')
+    identificador =data[0]
     image_64_encode = 0
     escala_grises = 0
     try:
         #comando = 'image_64_encode , escala_grises = objImagen.'+operador+'(rutaOriginal)'
-        exec('image_64_encode , escala_grises = objImagen.'+operador+'(data)')
+        exec('objImagen.'+operador+'(data)')
     except Exception as e:
         print(str(e))
     objImagen.LimpiarMemoria()
+    image_64_encode , escala_grises = objImagen.getEncodeImg()
     #Enviamos los datos al clase para guardarlos
     objImagen.setDatos([escala_grises , identificador, operador])
+    # objImagen.setImg_ruta(ruta_Img_Original)
+            
+    # #Generamos la imagen en base64 para retornarla y pintar
+    # image_64_encode = objImagen.Base64(ruta_Img_Original)
     #Obtenemos el modelo que vamos a mostar en la tabla
     datos = objImagen.getModelo()
 
+
     registro = objImagen.getModeloFinal(datos)
-    return {"imagen" : image_64_encode , "registro" : registro}
+    return {"img_Orginal" : image_64_encode , "registro" : registro}
 
 @api_Imperius.route("/limpiar_memoria" , methods = ['POST'])
 def Limpiar_Memoria():
