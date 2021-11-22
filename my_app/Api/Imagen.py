@@ -56,7 +56,7 @@ class Imagen():
         img = cv2.imread(ruta)
         return img
 
-    def ImagenWrite(self  , image ):
+    def ImagenWrite(self  , image):
         id = nameRandom(5)
         ruta_img = os.getcwd() + self.configuration["general"][0]["Imagenes"]+id+".jpg"
         cv2.imwrite(ruta_img, image)
