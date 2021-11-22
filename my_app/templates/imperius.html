@@ -5,72 +5,131 @@
         <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
         <!-- Bootstrap CSS -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
-        <!-- Load required Bootstrap and BootstrapVue CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
         <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
         <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
         <!-- Load Vue followed by BootstrapVue -->
         <!-- <script src="//unpkg.com/vue@latest/dist/vue.min.js"></script> -->
         <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
         <!-- Load the following for BootstrapVueIcons support -->
         <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue-icons.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <title>Hello, world!</title>
     </head>
-    <body>
+    <body style="background-color: rgba(0, 49, 82, 0.932);">
         <main>
             <section id="app">
-                <div class="container-fluid bg-light text-center">
-                    Aqui van los iconos de la aplicacion como guardar , run 
+                <div class="container-fluid text-center" style="background-color: rgb(182, 182, 182);">
+
+
                 </div>
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col " style="height: 500px;">
-                            <h3>Vista previa de las imagenes</h3>
-                            <div v-html="resultado_imagen" ></div>
-                        </div>
-                        <div class="col"  style="height: 500px;">
-                            <template> 
-                                <div>
-                                    <h3>Busca el operador que deseas</h3>
-                                    <b-form-select v-model="seleccion" @change="editar(seleccion)"  :options="operadores" style="width:50%"></b-form-select>
-                                </div>
-                            </template>
-                        
-                            <template v-if="showList[0].value"> 
-                                <div>
-                                    <!-- Plain mode -->
-                                    <!--<b-form-file v-model="imagenOriginal" class="mt-3" plain @change="ImageLoad($event)"></b-form-file>-->
-                                    <input type="file" accept=".png, .jpg" class="form-control-file mt-3" id="file" name="importfile" @change="ImageLoad($event)"/>
-                                    <div class="mt-3">Imagen seleccionada : [[ imagenOriginal ? imagenOriginal.name : '' ]]</div>
-                                    <button type="button" class="btn btn-success" v-on:click.prevent="funCargaImage" v-if="btnloadimage">Cargar</button>
-
-                                </div>
-                            </template>
-                            <template v-if="showList[1].value"> 
-                                <div>
-                                    <h3>Escala de grises</h3>
-                                    [[ info ]]
-                                    <button type="button" class="btn btn-success" v-on:click.prevent="funEscalaGrises">Cargar</button>
-                                </div>
-                            </template>
-
-                            <template v-if="showList[2].value"> 
-                                <div>
-                                    detectar bordes
-                                </div>
-                            </template>
-                        </div>
+                <template>
+                    <div>
+                        <b-button v-b-toggle.sidebar-variant  class="mt-2 ml-5">Opciones</b-button>
+                        <b-sidebar id="sidebar-variant" title="Mas opciones" bg-variant="dark" text-variant="light" shadow>
+                            <div class="px-3 py-2">
+                                <button class="btn btn-outline-danger" v-on:click.prevent="limpiarMemoria">Limpiar memoria</button>
+                            </div>
+                        </b-sidebar>
                     </div>
-                    <div class="row">
-                        <div class="col bg-success" style="height: 500px;">Aqui se veran las variables</div>
-                        <div class="col bg-warning" style="height: 500px;">Aqui el pseudocodigo</div>
+                </template>
+                <div class="container shadow p-3 mb-5 bg-light rounded mt-4 " >
+
+                    <!--***************Primera fila visualizacion y operadores**************-->
+                    <div class="row mb-2">
+                        <!--Aqui se visualizaran los cambios de las imagenes-->
+                        <div class="container col border border-secondary mr-1 ">
+                            <h3>Vista previa de las imagenes</h3>
+                            <div v-html="resultado_imagen" class= "col" ></div>
+                        </div>
+                        <!--Aqui se visualizaran los cambios de las imagenes-->
+
+                        <!--##########################################################-->
+                        <!--Aqui se visualizaran la lista de los operadores-->
+                        <div class="col-7 border border-secondary"  style="height: 500px;">
+                            <template>
+                                <div  class="mx-auto d-block  col">
+                                    <div class="alert alert-warning" role="alert" v-if = "showWarning">
+                                        [[info]]
+                                    </div>
+                                    <div class="alert alert-success" role="alert"  v-if = "showSuccess">
+                                        [[info]]
+                                    </div>
+                                    <div class="alert alert-danger" role="alert" v-if = "showDanger">
+                                        [[info]]
+                                    </div>
+                                    <h3 >Busca el operador que deseas</h3>
+                                    <b-form-select class="form-control " v-model="seleccion" @change="editar(seleccion)"  :options="operadores" ></b-form-select>
+                                </div>
+                            </template>
+
+                            <div class="mx-auto d-block col" v-if = "mostrarForm">
+                                <div>
+                                    <!-- <div class="form-group mt-3">
+                                        <label class="form-control-label h3" >Identificador </label>
+                                        <input type="text" class="form-control col"  placeholder="Identificador"  v-model="identificador" />
+                                    </div> -->
+                                    <div class="form-group" v-if ="showloadFile">
+                                        <input type="file" accept=".png, .jpg" class="form-control mt-3 col" id="file" name="importfile" @change="ImageLoad($event)" v-if ="showloadFile"/>
+                                    </div>
+                                    <div v-if = "showKernel" class=" mt-3 ">
+                                        <label class="form-control-label h3" > Kernel </label>
+                                        <b-form-select class="form-control" v-model="seleckernel"  :options="opcionkernel" ></b-form-select>
+                                    </div>
+
+
+                                    <div class="inputsGenerate form-group">
+                                        <!-- Aqui se genera la interfaz aleatoriamente -->
+
+                                    </div>
+                                    <!--<input type="range" min="0" max="100" step="1" v-model="valueRg" @change="OperatorMenu(seleccion)" v-if ="showList[4].value" >-->
+                                    <button type="button" class="btn btn-success mt-3 col" v-on:click.prevent="OperatorMenu(seleccion)" id="presiona"  >Cargar</button>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                        <!--Aqui se visualizaran la lista de los operadores-->
+                        <!--##########################################################-->
+                    </div>
+                    <!--***************Fin Primera fila visualizacion y operadores**************-->
+                    <!--***************Segunda fila pseudocodigo y variables**************-->
+                    <div class="row ">
+                        <div class="col  border border-secondary mr-1 " style="height: 500px;">
+
+                        </div>
+                        <div class="table-responsive col-7 border border-secondary mr-1 " style="height: 500px;">
+                                <table class="table table-hover table-bordered">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Operador</th>
+                                            <th scope="col">Valores</th>
+                                            <th scope="col">Opciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="rows in registro">
+                                            <td v-for ="item in rows" style="white-space:pre"> <p>[[ item ]]</p></td>
+                                            <td>
+                                                <button class="btn btn-outline-primary" v-on:click="Agregar(rows)"><i class="bi bi-plus-circle"></i></button>
+                                                <button class="btn btn-outline-secondary"><i class="bi bi-pen"></i></button>
+                                                <button class="btn btn-outline-danger" v-on:click="EliminarOperador(rows)" ><i class="bi bi-trash"></i></button>
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                        </div>
                     </div>
                 </div>
             </section>
-        </main>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        </main>
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
         <script type="text/javascript">
@@ -80,78 +139,317 @@
             data: {
                 message: 'Hello Vue!',
                 seleccion: null,
-                operadores:[
-                    { value: 0, text: 'cargar_imagen' },
-                    { value: 1, text: 'escala_grises' },
-                    { value: 2, text: 'detectar_bordes' },
+                operadores:[{
+                    value: null,
+                    text : "Seleccione una opcion",
+                    entradas:"",
+                    labelEn:""
+                }],
+                showList:[{
+                    value : false ,
+                    text : "Seleccione una opcion",
+                    entradas:"",
+                    labelEn:""
+                }],
+                opcionkernel:[
+                    {value : null , text:"default"},
+                    {value : 3 , text:"3"},
+                    {value : 5 , text:"5"}
                 ],
-                showList:[
-                    { value: false, text: 'cargar_imagen' },
-                    { value: false, text: 'escala_grises' },
-                    { value: false, text: 'detectar_bordes' },
-                ],
+                seleckernel:null,
+                showKernel:true,
                 imagenOriginal : null,
                 btnloadimage : false,
                 info: "",
                 resultado_imagen:null,
                 existe_original:false,
+                registro : [],
+                showDanger:false,
+                showSuccess:false,
+                showWarning:false,
+                identificador:"",
+                var_grises:"",
+                opAgregar : false,
+                mostrarForm : false,
+                valueRg : 50,
+                componentes:[
+                    {value : 0 , text:"input"},
+                    {value : 1 , text:"b-form-select"},
+                ],
+                data:[
+                    {value : null , text:"default"},
+                ],
+                showloadFile:false,
+                label:[]
+
+            },
+            mounted(){
+                // invocar los métodos
+                this.OperatorData();
             },
             methods :{
-                editar: function (x) {
-                    var that = this;
-                    //Tenemos que poner false a todo de nuevo
-                    for (var i = 0; i < that.showList.length; i++) {
-                        that.showList[i].value = false;
+                OperatorMenu(x){
+                    console.log(x);
+                    //Funcion principal se manda a llamar cada que se presiona el boton de procesar
+                    let config ={};
+                    // let array = [];
+                    $('input').each(function () {
+                        config[this.name] = this.value;
+                    });
+                    var url ="";
+                    if(x == 0){
+                        url = "http://127.0.0.1:5000/cargar_image";
+                    }else{
+                        url = "http://127.0.0.1:5000//Api/Operadores";
                     }
-                    that.showList[x].value = true;
+                    console.log(config['identificador']);
+                    console.log(typeof config);
+                    console.log(this.operadores[x+1].text);
+                    this.funCargaImage(url ,config , this.operadores[x+1].text);
+                    // URl de la Api
                 },
-                ImageLoad(event) {
-                    this.btnloadimage = false;
-                    this.imagenOriginal = event.target.files[0];
-                    if (this.imagenOriginal != null){
-                        this.btnloadimage = true;
-                    }
-                },
-                funCargaImage(){
+                OperatorData: function () {
+                    //Esta function se encarga de obtener los datos del txt Resgristro Operadores
                     var that = this;
-                    that.existe_original = false;
-                    console.log("Inciamos la carga de imagen");
-                    var bodyFormData = new FormData();
-                    bodyFormData.append('file',  that.imagenOriginal); 
-                    urlapi = "http://127.0.0.1:5000/cargar_image";
+                    that.mostrarForm = that.showList[0].value;
+                    urlapi = "http://127.0.0.1:5000/operators";
                     axios({
-                        method: 'POST', 
+                        method: 'POST',
                         url: urlapi,
-                        data: bodyFormData,
                     }).then(function(response){
-                        that.resultado_imagen = response.data["img_Orginal"];
-                        that.existe_original = true;
+                        var oper = response.data["operator"];
+                        for (let i = 0; i < oper.length; i++) {
+                            //var separador =oper[i].indexOf(',');
+                            var operador = oper[i].substring(0 , oper[i].indexOf(','));
+                            var Lista = oper[i].substring(oper[i].indexOf(',')+1, oper[i].length);
+                            var label = Lista.substring(0, Lista.indexOf(']')+1)
+                            label = label.substring(1, Lista.indexOf(']'))
+                            Lista =  Lista.substring(Lista.indexOf(']')+2, Lista.length);
+                            that.operadores.push({
+                                value: i,
+                                text: operador,
+                                entradas: Lista,
+                                labelEn:label
+
+                            });
+                            that.showList.push({
+                                value: i,
+                                text: operador ,
+                                entradas: Lista,
+                                labelEn:label
+                            });
+                        }
                     }).catch(function(error){
                         that.info = error;
                     });
                 },
-                funEscalaGrises(){
+                filtrar(i){
+                    /*
+                        Esta funcion se encarga de filtrar los datos de la tabla por el momento ya esta funcionando
+                        Iportante no mover nada
+                    */
+                    if(i.length >0){
+                        var array = [];
+                        var arrayFinal = [];
+                        var valores = "";
+                        var nameImage = "";
+                        var operador ="";
+                        for (var j = 0; j < i.length; j++){
+                            var vector = i[j];
+                            var ruta = vector[1][1];
+                            ruta = ruta.split("").reverse().join("");
+                            nameImage = "";
+                            for (var k = 0; k < ruta.length; k++){
+                                if ((ruta.charAt(k) == "/") || (ruta.charAt(k) =="//") || (ruta.charAt(k) =="\\") ){
+                                    break;
+                                }
+                                nameImage= nameImage + ruta.charAt(k);
+                            }
+                            nameImage = nameImage.split("").reverse().join("");
+                            operador = vector[3][1];
+                            operador = "\n\n"+operador.substring(0, (operador.length));
+                            valores ="{\n\t"+vector[0][0]+": "+vector[0][1]+"\n \t"
+                            +vector[1][0]+": "+nameImage+"\n \t"
+                            +vector[2][0]+": "+vector[2][1]+"\n \t"
+                            +vector[3][0]+": "+vector[3][1]+"\n}";
+                            array.push("\n\n"+j);
+                            array.push(operador);
+                            array.push(valores);
+                            arrayFinal.push(array);
+                            array = [];
+                        }
+                        return arrayFinal;
+                    }
+                },
+                editar (x) {
+                    /*
+                     * Esta funcion se encarga de
+                    */
                     var that = this;
-                    if (that.existe_original){
-                        console.log("Inciamos la carga de imagen");
+                    that.identificador = "";
+                    //Tenemos que poner false a todo de nuevo
+                    for (var i = 0; i < that.showList.length; i++) {
+                        that.showList[i].value = false;
+                    }
+                    that.showList[x+1].value = true;
+                    that.mostrarForm = that.showList[x+1].value;
+                    let cadena = that.showList[x+1].entradas;
+                    let labelEn=that.showList[x+1].labelEn;
+                    let array = cadena.split(',');
+                    let arraylabel = labelEn.split(',');
+                    this.label = arraylabel;
+                    $(document).ready(function() {
+                        var wrapper = $(".inputsGenerate"); //Fields wrapper
+                        $('#loadImg').remove();
+                        $('#contenido').remove();
+                        $('input').remove();
+                        $('h4').remove();
+                        $('br').remove();
+                        that.showKernel=false;
+                        that.showloadFile=false;
+                        wrapper = $(".inputsGenerate");
+                        // muestra en la consola 'intento 0', 'intento 1', ..., 'intento 4
+                        //Carga el componente para carga la imagen
+                        if ((x+1)== 1){
+                            console.log("Entramos en carga imagen")
+                            that.showloadFile=true;
+                            //$(wrapper).append('<div class="form-group" v-if ="showList[1].value" id="loadImg"> <input type="file" accept=".png, .jpg" class="form-control mt-3 col fileImg" id="fileImg" name="importfile" @onclick="ImageLoad($event)" /></div>');
+                        }
+                        //Aqui se genera los input de los operadors
+                        for (var i=0; i<arraylabel.length; i++) {
+                            if(array[i] == 0){
+                                $(wrapper).append('<div id="contenido" class="mt-3 "> <h4 style="display:inline;">'+arraylabel[i]+' </h4>  <input type='+that.componentes[array[i+1]]+' name="'+arraylabel[i]+'" style ="display:inline;" class="form-control"/> <br> </div>');
+                            }
+                            if(array[i] == 1){
+                                that.showKernel=true;
+                            }
+                        }
+                    });
+                    $( ".fileImg" ).bind({
+                        click: function() {
+                            console.log("auqi");
+                        },
+                        mouseenter: function() {
+                            console.log("auqi1s");
+                        }
+                    });
+                },
+                ImageLoad(event) {
+                    console.log("Estamos aqui ");
+                    //Esta funcion se activa cuando la imagen ya esta cargada
+                    this.btnloadimage = false;
+                    this.imagenOriginal = event.target.files[0];
+                    if (this.imagenOriginal != null ){
+                        this.btnloadimage = true;
+                    }
+                },
+                funCargaImage(url  ,data, operador){
+                    // Esta funcion se encarga de consumir el APi de Imperius
+                    var that = this;
+                    console.log("Estamos aqui esta es la informacion obtenida");
+                    console.log("---------------------------------");
+                    var array = []
+                    // var arrar;
+                    for( key in data){
+                        //Do stuff where key would be 0 and value would be the object
+                        console.log(data[key]);
+                        array.push(data[key]);
+                    }
+                    console.log("---------------------------------");
+                    if (data["identificador"] !=""){
+                        that.registro = []
+                        that.existe_original = false;
                         var bodyFormData = new FormData();
-                        urlapi = "http://127.0.0.1:5000/escala_grises";
+                        bodyFormData.append('file',   this.imagenOriginal);
+                        bodyFormData.append('data' , array);
+                        bodyFormData.append('operador' , operador);
+                        // bodyFormData.append('identificador' , data);
+                        urlapi = url;
                         axios({
-                            method: 'POST', 
+                            method: 'POST',
                             url: urlapi,
+                            data: bodyFormData,
                         }).then(function(response){
-                            that.resultado_imagen = response.data["img_escala_grises"];
-                            that.info = "";
+                            that.resultado_imagen = response.data["img_Orginal"];
+                            that.registro = response.data["registro"];
+                            that.registro = that.filtrar(that.registro);
+                            that.existe_original = true;
                         }).catch(function(error){
                             that.info = error;
                         });
                     }else{
+                        that.showWarning = true;
+                        that.info = "Escribe un identificador sin espacios de esta forma   identificador_uno ";
+                    }
+                },
+                operarImagen(url , data=[] ){
+                    //NO se esta ocupando
+                    var that = this;
+                    if (that.existe_original){
+                        if (that. identificador!=""){
+                            var bodyFormData = new FormData();
+                            bodyFormData.append('data' , data);
+                            urlapi = url;
+                            axios({
+                                method: 'POST',
+                                url: urlapi,
+                                data: bodyFormData,
+
+                            }).then(function(response){
+                                that.resultado_imagen = response.data["imagen"];
+                                that.registro = response.data["registro"];
+                                that.registro = that.filtrar(that.registro);
+                                that.info = "";
+                            }).catch(function(error){
+                                that.info = error;
+                            });
+                        }else{
+                            that.showWarning = true;
+                            that.info = "Escribe un identificador sin espacios de esta forma   identificador_uno ";
+                        }
+                    }else{
+                        that.showWarning = true;
                         that.info = "No existe la imagen utilize el operador cargar imagen"
                     }
-                }
-            
+                },
+                limpiarMemoria(){
+                    /**
+                     * Caada ve se utilize el operador cargar imagen se debe de limpiar memoria para que
+                     * y limpiar la tabla
+                    */
+                    var that = this;
+                    urlapi = "http://127.0.0.1:5000/limpiar_memoria";
+                    axios({
+                        method: 'POST',
+                        url: urlapi
+                    }).then(function(response){
+                        that.registro = response.data["registro"];
+                        that.info = "";
+                    }).catch(function(error){
+                        that.info = error;
+                    });
+                },
+                EliminarOperador(x){
+                    //Esta funcion se encarga de Eliminar algun operador de la tabla
+                    var that = this;
+                    var bodyFormData = new FormData();
+                    bodyFormData.append('posicion' ,x[0]);
+                    urlapi = "http://127.0.0.1:5000/eliminar_operador";
+                    axios({
+                        method: 'POST',
+                        url: urlapi,
+                        data: bodyFormData,
+                    }).then(function(response){
+                        that.registro = response.data["registro"];
+                        that.registro = that.filtrar(that.registro);
+                        that.info = "";
+
+                    }).catch(function(error){
+                        that.info = error;
+                    })
+                },
             }
-        })
+        });
         </script>
     </body>
 </html>

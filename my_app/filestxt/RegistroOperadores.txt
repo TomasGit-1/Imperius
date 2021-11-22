@@ -1,0 +1,12 @@
+Cargar_Imagen,[identificador],0
+Escala_Grises,[identificador],0
+Blur,[identificador , kernel],0,1
+Bilateral_Filter,[identificador,d,sigmaColor],0,0,0
+Box_Filter,[identificador,ksize],0,1
+Dilate,[identificador,kernel],0,1
+Erode,[identificador,kernel],0,1
+Filter2D,[identificador,kernel],0,1
+GaussianBlur,[identificador,kernel],0,1
+Laplacian,[identificador],0
+MedianBlur,[identificador],0
+Sobel,[identificador],0

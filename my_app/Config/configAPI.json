@@ -1,7 +1,8 @@
 {
     "general":[
         {
-            "Imagenes":"/images/"
+            "Imagenes":"/images/",
+            "OperadoresTxt" :"/filestxt/"
         }
     ]
 }
