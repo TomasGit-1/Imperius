@@ -31,6 +31,13 @@
                             <div class="px-3 py-2">
                                 <button class="btn btn-outline-danger" v-on:click.prevent="limpiarMemoria">Limpiar memoria</button>
                             </div>
+                            <hr>
+                            <label class="control-label px-3 py-2">Cargar algortim</label>
+                            <div class="px-3 py-2" v-if ="algoritmo">
+                                <textarea class="form-control mt-3" v-model="textArea" rows="10" cols="50" >e</textarea>
+                                <!-- <input type="file" accept=".txt , .py" class="form-control mt-3" id="algoritmo" name="algoritmo" @change="algoritmoLoad($event)" v-if ="algoritmo"/> -->
+                                <button type="button" class="btn btn-success mt-3 col" v-on:click.prevent="OperatorMenu(-1)" id="presiona"  >Cargar</button>
+                            </div>
                         </b-sidebar>
                     </div>
                 </template>
@@ -180,7 +187,10 @@
                     {value : null , text:"default"},
                 ],
                 showloadFile:false,
-                label:[]
+                label:[],
+                filealgoritmo:null,
+                algoritmo : true,
+                textArea :""
 
             },
             mounted(){
@@ -189,24 +199,30 @@
             },
             methods :{
                 OperatorMenu(x){
-                    console.log(x);
-                    //Funcion principal se manda a llamar cada que se presiona el boton de procesar
-                    let config ={};
-                    // let array = [];
-                    $('input').each(function () {
-                        config[this.name] = this.value;
-                    });
-                    var url ="";
-                    if(x == 0){
-                        url = "http://127.0.0.1:5000/cargar_image";
-                    }else{
+                    if (x == -1 ){
                         url = "http://127.0.0.1:5000//Api/Operadores";
+                        var array = []
+                        this.funCargaImage(url ,null , "Usuario", true);
+                    }else{
+                        console.log(x);
+                        //Funcion principal se manda a llamar cada que se presiona el boton de procesar
+                        let config ={};
+                        // let array = [];
+                        $('input').each(function () {
+                            config[this.name] = this.value;
+                        });
+                        var url ="";
+                        if(x == 0){
+                            url = "http://127.0.0.1:5000/cargar_image";
+                        }else{
+                            url = "http://127.0.0.1:5000//Api/Operadores";
+                        }
+                        console.log(config['identificador']);
+                        console.log(typeof config);
+                        console.log(this.operadores[x+1].text);
+                        this.funCargaImage(url ,config , this.operadores[x+1].text , false);
+                        // URl de la Api
                     }
-                    console.log(config['identificador']);
-                    console.log(typeof config);
-                    console.log(this.operadores[x+1].text);
-                    this.funCargaImage(url ,config , this.operadores[x+1].text);
-                    // URl de la Api
                 },
                 OperatorData: function () {
                     //Esta function se encarga de obtener los datos del txt Resgristro Operadores
@@ -307,11 +323,14 @@
                         $('br').remove();
                         that.showKernel=false;
                         that.showloadFile=false;
+                        that.algoritmo = true;
                         wrapper = $(".inputsGenerate");
+                        $('#algoritmo').add();
                         // muestra en la consola 'intento 0', 'intento 1', ..., 'intento 4
                         //Carga el componente para carga la imagen
-                        if ((x+1)== 1){
-                            console.log("Entramos en carga imagen")
+                        console.log(that.algoritmo);
+                        if ((x+1)== 1 ){
+                            console.log("Entramos en carga imagen");
                             that.showloadFile=true;
                             //$(wrapper).append('<div class="form-group" v-if ="showList[1].value" id="loadImg"> <input type="file" accept=".png, .jpg" class="form-control mt-3 col fileImg" id="fileImg" name="importfile" @onclick="ImageLoad($event)" /></div>');
                         }
@@ -324,6 +343,9 @@
                                 that.showKernel=true;
                             }
                         }
+                        that.algoritmo = true;
+
+
                     });
                     $( ".fileImg" ).bind({
                         click: function() {
@@ -340,29 +362,32 @@
                     this.btnloadimage = false;
                     this.imagenOriginal = event.target.files[0];
                     if (this.imagenOriginal != null ){
+                        console.log("Un archivo esta cargado");
                         this.btnloadimage = true;
                     }
                 },
-                funCargaImage(url  ,data, operador){
+                algoritmoLoad(event) {
+                    console.log(event.target.files[0]);
+                    //Esta funcion se activa cuando la imagen ya esta cargada
+                    this.filealgoritmo = event.target.files[0];
+                    console.log(this.filealgoritmo);
+                    if (this.filealgoritmo != null ){
+                        console.log("Un archivo esta cargado");
+                        this.algoritmo = true;
+                    }
+                },
+                funCargaImage(url  ,data, operador , bandera){
                     // Esta funcion se encarga de consumir el APi de Imperius
                     var that = this;
-                    console.log("Estamos aqui esta es la informacion obtenida");
-                    console.log("---------------------------------");
-                    var array = []
-                    // var arrar;
-                    for( key in data){
-                        //Do stuff where key would be 0 and value would be the object
-                        console.log(data[key]);
-                        array.push(data[key]);
-                    }
-                    console.log("---------------------------------");
-                    if (data["identificador"] !=""){
-                        that.registro = []
-                        that.existe_original = false;
+                    if (bandera){
+                        console.log("El Usuario cargo su algortimo");
+                        console.log(that.textArea);
+                        console.log("----------------=");
                         var bodyFormData = new FormData();
-                        bodyFormData.append('file',   this.imagenOriginal);
-                        bodyFormData.append('data' , array);
+                        bodyFormData.append('file',   that.textArea);
+                        bodyFormData.append('data' , data);
                         bodyFormData.append('operador' , operador);
+                        bodyFormData.append('bandera' , bandera);
                         // bodyFormData.append('identificador' , data);
                         urlapi = url;
                         axios({
@@ -377,9 +402,44 @@
                         }).catch(function(error){
                             that.info = error;
                         });
+
                     }else{
-                        that.showWarning = true;
-                        that.info = "Escribe un identificador sin espacios de esta forma   identificador_uno ";
+                        if (data["identificador"] !=""){
+                            console.log("Estamos aqui esta es la informacion obtenida");
+                            console.log("---------------------------------");
+                            var array = []
+                            // var arrar;
+                            for( key in data){
+                                //Do stuff where key would be 0 and value would be the object
+                                console.log(data[key]);
+                                array.push(data[key]);
+                            }
+                            console.log("---------------------------------");
+                            that.registro = []
+                            that.existe_original = false;
+                            var bodyFormData = new FormData();
+                            bodyFormData.append('file',   this.imagenOriginal);
+                            bodyFormData.append('data' , array);
+                            bodyFormData.append('operador' , operador);
+                            bodyFormData.append('bandera' , bandera);
+                            // bodyFormData.append('identificador' , data);
+                            urlapi = url;
+                            axios({
+                                method: 'POST',
+                                url: urlapi,
+                                data: bodyFormData,
+                            }).then(function(response){
+                                that.resultado_imagen = response.data["img_Orginal"];
+                                that.registro = response.data["registro"];
+                                that.registro = that.filtrar(that.registro);
+                                that.existe_original = true;
+                            }).catch(function(error){
+                                that.info = error;
+                            });
+                        }else{
+                            that.showWarning = true;
+                            that.info = "Escribe un identificador sin espacios de esta forma   identificador_uno ";
+                        }
                     }
                 },
                 operarImagen(url , data=[] ){

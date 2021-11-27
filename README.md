@@ -39,3 +39,9 @@
     Se decide apllicar un id a cada compontente 
     0 == input
     1 == select o b-form-select
+
+# Para el algoritmo
+    Cada instruccion debe ser separada por ;
+    #Ejemplo
+        data = ["identificador" , 15 , 17];
+        d = int(data[1]);

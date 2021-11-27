@@ -14,6 +14,18 @@ def cargaConfig():
     except  Exception as e:
         print(e)
 
+def readAlgoritmo(path):
+    code=[]
+    with open(path, 'r') as f:
+        lineas = f.readlines()
+
+    for line in lineas:
+        code.append(line)
+    
+    return code
+        
+
+
 def nameRandom(number_of_strings):
     number_of_strings = 5
     length_of_string = 8

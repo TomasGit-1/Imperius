@@ -89,6 +89,31 @@ class Imagen():
     #                Operadores                       #
     #=================================================#
     #=================================================#
+
+    def FiltroUser(self, path):
+        img = self.ImagenRead(self.getImg_ruta())
+        data = []
+        image_64_encode =0
+        ruta_img = 0
+        image =""
+        code=""
+
+        with open(path, 'r') as f:
+            lineas = f.readlines()
+
+        for line in lineas:
+            exec(code)
+            #eval(code)
+        #    code= code +line
+        #exec(open(path).read())
+        print("")
+
+        image_64_encode , ruta_img = self.ImagenWrite(image)
+        self.setEncodeImg([image_64_encode , ruta_img])
+
+        #==============================#
+
+
     def Escala_Grises(self , data=[]):
         try:
             img = self.ImagenRead(self.getImg_ruta())
