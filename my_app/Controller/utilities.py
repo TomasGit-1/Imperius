@@ -26,6 +26,14 @@ def readAlgoritmo(path):
         
 
 
+def GuardarAlgoritmo(path , data ):
+    with open(path, 'w') as f:
+        for item in data:
+            f.write(item)
+
+    return True
+
+
 def nameRandom(number_of_strings):
     number_of_strings = 5
     length_of_string = 8

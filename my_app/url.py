@@ -81,8 +81,8 @@ def operadores():
     bandera = request.values['bandera']
     if bandera == 'true':
         #Esto se encargar de general el algorritmo del ursuario
-        #file = request.files['file']
-        dataFull = request.values['file']
+        file = request.files['file']
+        #dataFull = request.values['file']
         rutaAlgorimo = os.getcwd() + configuration["general"][0]["Algoritmos"]
         id = nameRandom(5)
         #Creamos la carpeta para las imagenes
@@ -94,26 +94,47 @@ def operadores():
         #Guardamos la imagen
         file.save(rutaAlgorimoGR)
         code = readAlgoritmo(rutaAlgorimoGR)
-        objImagen.FiltroUser(rutaAlgorimoGR)
+        j=0 
+        for i in code:
+            if "def" in i:
+                break 
+            j= j +1
+    
+        pos  = code[j].find('(')
+        code[j] = code[j][:pos]+"_"+id+code[j][pos:]
 
-        identificador ="Filtro_"+id
-        image_64_encode = 0
-        escala_grises = 0
-        image_64_encode , escala_grises = objImagen.getEncodeImg()
-        #Enviamos los datos al clase para guardarlos
-        objImagen.setDatos([escala_grises , identificador, identificador])
-        # objImagen.setImg_ruta(ruta_Img_Original)
+        name_Def = code[j][code[j].find('f')+1:code[j].find('(')].strip()
+        
+        rutafilepy = os.getcwd() + configuration["general"][0]["Filtros"]
+
+        filepy = open(rutafilepy, "a")
+        filepy.write("\n")
+        filepy.writelines("%s" % s for s in code)
+        filepy.write("\n")
+        filepy.close()
+
+
+
+        # objImagen.FiltroUser(rutaAlgorimoGR)
+
+        # identificador ="Filtro_"+id
+        # image_64_encode = 0
+        # escala_grises = 0
+        # image_64_encode , escala_grises = objImagen.getEncodeImg()
+        # #Enviamos los datos al clase para guardarlos
+        # objImagen.setDatos([escala_grises , identificador, identificador])
+        # # objImagen.setImg_ruta(ruta_Img_Original)
                 
-        # #Generamos la imagen en base64 para retornarla y pintar
-        # image_64_encode = objImagen.Base64(ruta_Img_Original)
-        #Obtenemos el modelo que vamos a mostar en la tabla
-        datos = objImagen.getModelo()
+        # # #Generamos la imagen en base64 para retornarla y pintar
+        # # image_64_encode = objImagen.Base64(ruta_Img_Original)
+        # #Obtenemos el modelo que vamos a mostar en la tabla
+        # datos = objImagen.getModelo()
 
 
-        registro = objImagen.getModeloFinal(datos)
+        # registro = objImagen.getModeloFinal(datos)
 
 
-        print(str(code))
+        # print(str(code))
         
         return {"img_Orginal" : "image_64_encode" , "registro" : ""}
     else:

@@ -34,8 +34,8 @@
                             <hr>
                             <label class="control-label px-3 py-2">Cargar algortim</label>
                             <div class="px-3 py-2" v-if ="algoritmo">
-                                <textarea class="form-control mt-3" v-model="textArea" rows="10" cols="50" >e</textarea>
-                                <!-- <input type="file" accept=".txt , .py" class="form-control mt-3" id="algoritmo" name="algoritmo" @change="algoritmoLoad($event)" v-if ="algoritmo"/> -->
+                                <!-- <textarea class="form-control mt-3" v-model="textArea" rows="10" cols="50" >e</textarea> -->
+                                <input type="file" accept=".txt , .py" class="form-control mt-3" id="algoritmo" name="algoritmo" @change="algoritmoLoad($event)" v-if ="algoritmo"/>
                                 <button type="button" class="btn btn-success mt-3 col" v-on:click.prevent="OperatorMenu(-1)" id="presiona"  >Cargar</button>
                             </div>
                         </b-sidebar>
@@ -381,10 +381,10 @@
                     var that = this;
                     if (bandera){
                         console.log("El Usuario cargo su algortimo");
-                        console.log(that.textArea);
+                        console.log(that.imagenOriginal);
                         console.log("----------------=");
                         var bodyFormData = new FormData();
-                        bodyFormData.append('file',   that.textArea);
+                        bodyFormData.append('file',   that.filealgoritmo);
                         bodyFormData.append('data' , data);
                         bodyFormData.append('operador' , operador);
                         bodyFormData.append('bandera' , bandera);
