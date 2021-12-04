@@ -82,6 +82,7 @@ def operadores():
     if bandera == 'true':
         #Esto se encargar de general el algorritmo del ursuario
         file = request.files['file']
+        data = request.values['data']
         #dataFull = request.values['file']
         rutaAlgorimo = os.getcwd() + configuration["general"][0]["Algoritmos"]
         id = nameRandom(5)
@@ -113,6 +114,12 @@ def operadores():
         filepy.write("\n")
         filepy.close()
 
+        route_file = os.getcwd() + configuration["general"][0]["OperadoresTxt"]
+
+        filepy = open(route_file, "a")
+        filepy.write("\n")
+        filepy.writelines(name_Def +","+data)
+        filepy.close()
 
 
         # objImagen.FiltroUser(rutaAlgorimoGR)
@@ -140,7 +147,7 @@ def operadores():
     else:
         #Obtenemos los datos de la interfaz
         #Obtenemos los datos de la interfaz
-        file = request.files['file']
+        #file = request.files['file']
         operador = request.values['operador']
         data = request.values['data']
         data = data.split(',')

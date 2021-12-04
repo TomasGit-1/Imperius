@@ -35,7 +35,15 @@
                             <label class="control-label px-3 py-2">Cargar algortim</label>
                             <div class="px-3 py-2" v-if ="algoritmo">
                                 <!-- <textarea class="form-control mt-3" v-model="textArea" rows="10" cols="50" >e</textarea> -->
+                                <label>Entrada de datos</label>
+                                    <ul>
+                                        <li>0 = input</li>
+                                        <li>1 == select o b-form-select</li>
+                                    </ul>
+                                <label>Ejemplo de la entrada de datos [Nombre de la entrada de los datos ] , input , input , input</label>
+                                <label>[identificador,d,sigmaColor],0,0,0 </label>
                                 <input type="file" accept=".txt , .py" class="form-control mt-3" id="algoritmo" name="algoritmo" @change="algoritmoLoad($event)" v-if ="algoritmo"/>
+                                <textarea class="form-control mt-3" v-model="entrada" rows="10" cols="10" style="height:40px"></textarea>
                                 <button type="button" class="btn btn-success mt-3 col" v-on:click.prevent="OperatorMenu(-1)" id="presiona"  >Cargar</button>
                             </div>
                         </b-sidebar>
@@ -190,7 +198,7 @@
                 label:[],
                 filealgoritmo:null,
                 algoritmo : true,
-                textArea :""
+                entrada :""
 
             },
             mounted(){
@@ -227,6 +235,18 @@
                 OperatorData: function () {
                     //Esta function se encarga de obtener los datos del txt Resgristro Operadores
                     var that = this;
+                    that.operadores=[{
+                        value: null,
+                        text : "Seleccione una opcion",
+                        entradas:"",
+                        labelEn:""
+                    }],
+                    that.showList=[{
+                        value : false ,
+                        text : "Seleccione una opcion",
+                        entradas:"",
+                        labelEn:""
+                    }],                    
                     that.mostrarForm = that.showList[0].value;
                     urlapi = "http://127.0.0.1:5000/operators";
                     axios({
@@ -382,10 +402,11 @@
                     if (bandera){
                         console.log("El Usuario cargo su algortimo");
                         console.log(that.imagenOriginal);
+                        console.log(that.entrada);
                         console.log("----------------=");
                         var bodyFormData = new FormData();
                         bodyFormData.append('file',   that.filealgoritmo);
-                        bodyFormData.append('data' , data);
+                        bodyFormData.append('data' , that.entrada);
                         bodyFormData.append('operador' , operador);
                         bodyFormData.append('bandera' , bandera);
                         // bodyFormData.append('identificador' , data);
@@ -399,6 +420,7 @@
                             that.registro = response.data["registro"];
                             that.registro = that.filtrar(that.registro);
                             that.existe_original = true;
+                            that.OperatorData();
                         }).catch(function(error){
                             that.info = error;
                         });
