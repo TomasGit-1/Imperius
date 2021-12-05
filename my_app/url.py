@@ -20,7 +20,9 @@ def home():
 
 @api_Imperius.route("/imperius/")
 def Home_App():
-    return render_template("imperius.html")
+    route_file = os.getcwd() + configuration["general"][0]["imagenInicio"]
+    image_64_encode = objImagen.Base64(route_file)
+    return render_template("imperius.html" , imagenUser=image_64_encode)
 
 @api_Imperius.route("/operators", methods = ['POST'])
 def operators():
