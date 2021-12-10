@@ -20,9 +20,7 @@ def home():
 
 @api_Imperius.route("/imperius/")
 def Home_App():
-    route_file = os.getcwd() + configuration["general"][0]["imagenInicio"]
-    image_64_encode = objImagen.Base64(route_file)
-    return render_template("imperius.html" , imagenUser=image_64_encode)
+    return render_template("imperius.html")
 
 @api_Imperius.route("/operators", methods = ['POST'])
 def operators():
@@ -194,6 +192,38 @@ def Eliminar_Operador():
 
     return { "registro" : registro}
 
+
+@api_Imperius.route("/listaImages" , methods=["POST"])
+def ListarImagenes():
+    try:
+        data = request.values['data']
+        data = data.split(',')
+        data = data[2].rstrip().split('\n')
+        data = data[1].replace("\t" , "")
+        data = data[data.find(':')+1:].lstrip()
+        #Obtenemos el registros de los operadoresTxt
+        registro = objImagen.getData()
+        for i in registro:
+            if data == i[0][1]:
+                print(i)
+                objImagen.setImg_ruta(i[1][1])
+                #Generamos la imagen en base64 para retornarla y pintar
+                image_64_encode = objImagen.Base64(i[1][1])
+                return { "img_Orginal" : image_64_encode}
+
+        # rutasImagenes = []
+        # if registro == []:
+        #     return { "imagenes" : []}
+        # else:
+        #     cont = 0
+        #     for i in registro:
+        #         new = []
+        #         new = [cont , i[0][1]]
+        #         rutasImagenes.append(new)
+        #         cont=cont+1
+        return { "img_Orginal" : ""}
+    except Exception as e:
+        print("Error: " + str(e))
 
 
 

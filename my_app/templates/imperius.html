@@ -24,23 +24,26 @@
                 <!-- Button trigger modal -->
                 <!-- <div v-html={{imagenUser}} ></div> -->
                 <!-- Modal -->
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body" >
-                            Tomas Lopez Perez 19 de diciembre 2021
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <!-- <img src={{url_for('static', filename='./static/images/imagen.jpg')}} style="width:800px; height: 500px;"> -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body ">
+                                <!-- <img src={{ url_for('static', filename='imagen.jpg')   }} style="width:400px; height: 100px;"> -->
+
+                                Tomas Lopez Perez 19 de diciembre 2021
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
             
             
             <div class="container-fluid text-center" style="background-color: rgb(182, 182, 182);">
@@ -115,7 +118,7 @@
                                     </div>
                                     <div v-if = "showKernel" class=" mt-3 ">
                                         <label class="form-control-label h3" > Kernel </label>
-                                        <b-form-select class="form-control" v-model|="seleckernel"  :options="opcionkernel" ></b-form-select>
+                                        <b-form-select class="form-control" v-model="seleckernel"  :options="opcionkernel" ></b-form-select>
                                     </div>
 
 
@@ -138,6 +141,7 @@
                     <!--***************Segunda fila pseudocodigo y variables**************-->
                     <div class="row ">
                         <div class="col  border border-secondary mr-1 " style="height: 500px;">
+                            <!-- Se mostrara temporalmente las imagenes creadas -->
 
                         </div>
                         <div class="table-responsive col-7 border border-secondary mr-1 " style="height: 500px;">
@@ -155,6 +159,7 @@
                                             <td v-for ="item in rows" style="white-space:pre"> <p>[[ item ]]</p></td>
                                             <td>
                                                 <button class="btn btn-outline-primary" v-on:click="Agregar(rows)"><i class="bi bi-plus-circle"></i></button>
+                                                <button class="btn btn-outline-warning" v-on:click="imagenLoad(rows)"><i class="bi bi-cursor"></i></i></button>
                                                 <button class="btn btn-outline-secondary"><i class="bi bi-pen"></i></button>
                                                 <button class="btn btn-outline-danger" v-on:click="EliminarOperador(rows)" ><i class="bi bi-trash"></i></button>
                                             </td>
@@ -223,21 +228,39 @@
                 label:[],
                 filealgoritmo:null,
                 algoritmo : true,
-                entrada :""
-
+                entrada :"",
+                dataSlide: [],
+                minImgenes:[]
             },
             mounted(){
                 // invocar los métodos
                 this.OperatorData();
+                this.imagenLoad();
             },
             methods :{
+                imagenLoad(item){
+                    console.log(item);
+                    var that = this;
+                    url =  "http://127.0.0.1:5000/listaImages";
+                    var bodyFormData = new FormData();
+                    bodyFormData.append('data', item);
+                    axios({
+                        method : 'POST',
+                        url : url,
+                        data: bodyFormData,
+                    }).then(function(response){
+                        that.resultado_imagen = response.data["img_Orginal"];                        
+                        //that.filtrarImagen(response.data["imagenes"]);
+                    }).catch(function(error){
+
+                    })
+                },
                 OperatorMenu(x){
                     if (x == -1 ){
                         url = "http://127.0.0.1:5000//Api/Operadores";
                         var array = []
                         this.funCargaImage(url ,null , "Usuario", true);
                     }else{
-                        console.log(x);
                         //Funcion principal se manda a llamar cada que se presiona el boton de procesar
                         let config ={};
                         // let array = [];
@@ -250,9 +273,6 @@
                         }else{
                             url = "http://127.0.0.1:5000//Api/Operadores";
                         }
-                        console.log(config['identificador']);
-                        console.log(typeof config);
-                        console.log(this.operadores[x+1].text);
                         this.funCargaImage(url ,config , this.operadores[x+1].text , false);
                         // URl de la Api
                     }
@@ -373,9 +393,7 @@
                         $('#algoritmo').add();
                         // muestra en la consola 'intento 0', 'intento 1', ..., 'intento 4
                         //Carga el componente para carga la imagen
-                        console.log(that.algoritmo);
                         if ((x+1)== 1 ){
-                            console.log("Entramos en carga imagen");
                             that.showloadFile=true;
                             //$(wrapper).append('<div class="form-group" v-if ="showList[1].value" id="loadImg"> <input type="file" accept=".png, .jpg" class="form-control mt-3 col fileImg" id="fileImg" name="importfile" @onclick="ImageLoad($event)" /></div>');
                         }
@@ -402,22 +420,17 @@
                     });
                 },
                 ImageLoad(event) {
-                    console.log("Estamos aqui ");
                     //Esta funcion se activa cuando la imagen ya esta cargada
                     this.btnloadimage = false;
                     this.imagenOriginal = event.target.files[0];
                     if (this.imagenOriginal != null ){
-                        console.log("Un archivo esta cargado");
                         this.btnloadimage = true;
                     }
                 },
                 algoritmoLoad(event) {
-                    console.log(event.target.files[0]);
                     //Esta funcion se activa cuando la imagen ya esta cargada
                     this.filealgoritmo = event.target.files[0];
-                    console.log(this.filealgoritmo);
                     if (this.filealgoritmo != null ){
-                        console.log("Un archivo esta cargado");
                         this.algoritmo = true;
                     }
                 },
@@ -425,10 +438,6 @@
                     // Esta funcion se encarga de consumir el APi de Imperius
                     var that = this;
                     if (bandera){
-                        console.log("El Usuario cargo su algortimo");
-                        console.log(that.imagenOriginal);
-                        console.log(that.entrada);
-                        console.log("----------------=");
                         var bodyFormData = new FormData();
                         bodyFormData.append('file',   that.filealgoritmo);
                         bodyFormData.append('data' , that.entrada);
@@ -452,16 +461,12 @@
 
                     }else{
                         if (data["identificador"] !=""){
-                            console.log("Estamos aqui esta es la informacion obtenida");
-                            console.log("---------------------------------");
                             var array = []
                             // var arrar;
                             for( key in data){
                                 //Do stuff where key would be 0 and value would be the object
-                                console.log(data[key]);
                                 array.push(data[key]);
                             }
-                            console.log("---------------------------------");
                             that.registro = []
                             that.existe_original = false;
                             var bodyFormData = new FormData();
