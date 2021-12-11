@@ -85,10 +85,8 @@ class Imagen():
         return self.encodeData[0] , self.encodeData[1]
     
     def Operador_Existe(self , operadorName):
-        msg = ""
         if operadorName in self.operadorDefault:
-            msg = "No se puede eliminar el operador no tienes permiso Admin :)"
-            return msg  
+            return False
         else:
             cont = 0
             route_file = os.getcwd() + self.configuration["general"][0]["OperadoresTxt"]
@@ -100,8 +98,7 @@ class Imagen():
                     RescribirOperator(route_file ,operator)
                     break
                 cont = cont + 1
-            msg = "Operador eliminado"
-            return msg
+            return True
 
 
 

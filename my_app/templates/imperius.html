@@ -15,6 +15,7 @@
         <!-- Load the following for BootstrapVueIcons support -->
         <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue-icons.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <title>Hello, world!</title>
     </head>
     <body style="background-color: rgba(0, 49, 82, 0.932);">
@@ -128,7 +129,7 @@
                                     </div>
                                     <!--<input type="range" min="0" max="100" step="1" v-model="valueRg" @change="OperatorMenu(seleccion)" v-if ="showList[4].value" >-->
                                     <button type="button" class="btn btn-success mt-3 col" v-on:click.prevent="OperatorMenu(seleccion)" id="presiona"  >Cargar</button>
-                                    <button type="button" class="btn btn-danger mt-3 col" v-on:click.prevent="OperatorMenu(seleccion)" id="presiona"  >Elimianr</button>
+                                    <button type="button" class="btn btn-danger mt-3 col" v-on:click.prevent="OperatorMenuDelete(seleccion)" id="presiona"  >Eliminar</button>
                                 </div>
                             </div>
 
@@ -239,6 +240,46 @@
                 this.imagenLoad();
             },
             methods :{
+                OperatorMenuDelete(x){
+                    var that = this;
+                    console.log(x);
+                    var data = that.operadores[x+1].text
+                    console.log(data)
+                    url =  "http://127.0.0.1:5000/deleteOperadorU/";
+                    var bodyFormData = new FormData();
+                    bodyFormData.append('operador', data);
+                    axios({
+                        method : 'POST',
+                        url : url,
+                        data: bodyFormData,
+                    }).then(function(response){
+                        var msg = response.data["respuesta"];                        
+                        var status = response.data["codigo"];
+                        console.log(status);
+                        if (status== 200){
+                            Swal.fire({
+                                position: 'top-end',
+                                icon: 'success',
+                                title: msg,
+                                showConfirmButton: false,
+                                timer: 1500
+                            })
+                            that.OperatorData();
+                        }else{
+                            Swal.fire({
+                                position: 'top-end',
+                                icon: 'error',
+                                title: ':)',
+                                text: msg,
+                                showConfirmButton: false,
+                                timer: 1500
+                            })
+                        }                        
+                        //that.filtrarImagen(response.data["imagenes"]);
+                    }).catch(function(error){
+
+                    })
+                },
                 imagenLoad(item){
                     console.log(item);
                     var that = this;
@@ -250,7 +291,8 @@
                         url : url,
                         data: bodyFormData,
                     }).then(function(response){
-                        that.resultado_imagen = response.data["img_Orginal"];                        
+                        that.resultado_imagen = response.data["img_Orginal"];
+                        console.log(that.resultado_imagen);                    
                         //that.filtrarImagen(response.data["imagenes"]);
                     }).catch(function(error){
 
