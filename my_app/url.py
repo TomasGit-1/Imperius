@@ -14,6 +14,7 @@ objImagen = Imagen()
 registro = []
 
 
+
 @api_Imperius.route("/")
 def home():
     return render_template("home.html")
@@ -21,6 +22,13 @@ def home():
 @api_Imperius.route("/imperius/")
 def Home_App():
     return render_template("imperius.html")
+
+@api_Imperius.route("/deleteOperadorU/" ,  methods = ['POST'])
+def OperadorU_Delete():
+    if request.method == 'POST':
+        operador = request.values['operador']
+        res = objImagen.Operador_Existe(operador)
+        return {"respues" : res }
 
 @api_Imperius.route("/operators", methods = ['POST'])
 def operators():

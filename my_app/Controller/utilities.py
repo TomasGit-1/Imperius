@@ -89,3 +89,9 @@ def getOperator(ruta):
     with open(ruta , "r") as lines:
         file = lines.readlines()
     return file
+
+def RescribirOperator(ruta , lista):
+    file = []
+    with open(ruta , "w") as lines:
+        for i in lista:
+            file = lines.write(i)

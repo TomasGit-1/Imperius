@@ -1,4 +1,4 @@
-from Controller.utilities import cargaConfig , nameRandom
+from Controller.utilities import cargaConfig , nameRandom , getOperator , RescribirOperator
 import os
 import base64
 import cv2
@@ -11,8 +11,8 @@ class Imagen():
     identificador=""
     modelo = []
     modeloFinal = []
-
     encodeData = []
+    operadorDefault = ["Cargar_Imagen" , "Escala_Grises" , "Blur" , "Bilateral_Filter" , "Box_Filter" , "Dilate" , "Erode" , "Filter2D" , "GaussianBlur" , "Laplacian" , "MedianBlur" , "Sobel" ]
 
     def setDatos (self , datos = []):
         self.ruta = datos[0]
@@ -83,6 +83,27 @@ class Imagen():
 
     def getEncodeImg(self):
         return self.encodeData[0] , self.encodeData[1]
+    
+    def Operador_Existe(self , operadorName):
+        msg = ""
+        if operadorName in self.operadorDefault:
+            msg = "No se puede eliminar el operador no tienes permiso Admin :)"
+            return msg  
+        else:
+            cont = 0
+            route_file = os.getcwd() + self.configuration["general"][0]["OperadoresTxt"]
+            operator = getOperator(route_file)
+            for i in operator:
+                temp = i.split(",")
+                if operadorName == temp[0]:
+                    operator.pop(cont)
+                    RescribirOperator(route_file ,operator)
+                    break
+                cont = cont + 1
+            msg = "Operador eliminado"
+            return msg
+
+
 
     
 
