@@ -28,7 +28,14 @@ def OperadorU_Delete():
     if request.method == 'POST':
         operador = request.values['operador']
         res = objImagen.Operador_Existe(operador)
-        return {"respues" : res }
+        msg = ""
+        if res:
+            msg = "Operador eliminado"
+            return {"respuesta" : msg , "codigo":200}
+        else:
+            msg = "No se puede eliminar el operador no tienes permiso del Desarrollador :)"
+            return {"respuesta" : msg, "codigo" :400}
+
 
 @api_Imperius.route("/operators", methods = ['POST'])
 def operators():
@@ -205,31 +212,33 @@ def Eliminar_Operador():
 def ListarImagenes():
     try:
         data = request.values['data']
-        data = data.split(',')
-        data = data[2].rstrip().split('\n')
-        data = data[1].replace("\t" , "")
-        data = data[data.find(':')+1:].lstrip()
-        #Obtenemos el registros de los operadoresTxt
-        registro = objImagen.getData()
-        for i in registro:
-            if data == i[0][1]:
-                print(i)
-                objImagen.setImg_ruta(i[1][1])
-                #Generamos la imagen en base64 para retornarla y pintar
-                image_64_encode = objImagen.Base64(i[1][1])
-                return { "img_Orginal" : image_64_encode}
+        if data == 'undefined':
+            return { "img_Orginal" : ""}
+        else:
+            data = data.split(',')
+            data = data[2].rstrip().split('\n')
+            data = data[1].replace("\t" , "")
+            data = data[data.find(':')+1:].lstrip()
+            #Obtenemos el registros de los operadoresTxt
+            registro = objImagen.getData()
+            for i in registro:
+                if data == i[0][1]:
+                    print(i)
+                    objImagen.setImg_ruta(i[1][1])
+                    #Generamos la imagen en base64 para retornarla y pintar
+                    image_64_encode = objImagen.Base64(i[1][1])
+                    return { "img_Orginal" : image_64_encode}
 
-        # rutasImagenes = []
-        # if registro == []:
-        #     return { "imagenes" : []}
-        # else:
-        #     cont = 0
-        #     for i in registro:
-        #         new = []
-        #         new = [cont , i[0][1]]
-        #         rutasImagenes.append(new)
-        #         cont=cont+1
-        return { "img_Orginal" : ""}
+            # rutasImagenes = []
+            # if registro == []:
+            #     return { "imagenes" : []}
+            # else:
+            #     cont = 0
+            #     for i in registro:
+            #         new = []
+            #         new = [cont , i[0][1]]
+            #         rutasImagenes.append(new)
+            #         cont=cont+1
     except Exception as e:
         print("Error: " + str(e))
 
