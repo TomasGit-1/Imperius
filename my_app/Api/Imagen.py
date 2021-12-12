@@ -1,4 +1,4 @@
-from Controller.utilities import cargaConfig , nameRandom
+from Controller.utilities import cargaConfig , nameRandom , getOperator , RescribirOperator
 import os
 import base64
 import cv2
@@ -11,8 +11,8 @@ class Imagen():
     identificador=""
     modelo = []
     modeloFinal = []
-
     encodeData = []
+    operadorDefault = ["Cargar_Imagen" , "Escala_Grises" , "Blur" , "Bilateral_Filter" , "Box_Filter" , "Dilate" , "Erode" , "Filter2D" , "GaussianBlur" , "Laplacian" , "MedianBlur" , "Sobel" ]
 
     def setDatos (self , datos = []):
         self.ruta = datos[0]
@@ -51,6 +51,9 @@ class Imagen():
         self.modeloFinal.append(datos)
         return self.modeloFinal
 
+    def getData(self):
+        return self.modeloFinal
+
     def ImagenRead(self , ruta):
         # Read the image.
         img = cv2.imread(ruta)
@@ -80,6 +83,24 @@ class Imagen():
 
     def getEncodeImg(self):
         return self.encodeData[0] , self.encodeData[1]
+    
+    def Operador_Existe(self , operadorName):
+        if operadorName in self.operadorDefault:
+            return False
+        else:
+            cont = 0
+            route_file = os.getcwd() + self.configuration["general"][0]["OperadoresTxt"]
+            operator = getOperator(route_file)
+            for i in operator:
+                temp = i.split(",")
+                if operadorName == temp[0]:
+                    operator.pop(cont)
+                    RescribirOperator(route_file ,operator)
+                    break
+                cont = cont + 1
+            return True
+
+
 
     
 
@@ -89,6 +110,31 @@ class Imagen():
     #                Operadores                       #
     #=================================================#
     #=================================================#
+
+    def FiltroUser(self, path):
+        img = self.ImagenRead(self.getImg_ruta())
+        data = []
+        image_64_encode =0
+        ruta_img = 0
+        image =""
+        code=""
+
+        with open(path, 'r') as f:
+            lineas = f.readlines()
+
+        for line in lineas:
+            exec(code)
+            #eval(code)
+        #    code= code +line
+        #exec(open(path).read())
+        print("")
+
+        image_64_encode , ruta_img = self.ImagenWrite(image)
+        self.setEncodeImg([image_64_encode , ruta_img])
+
+        #==============================#
+
+
     def Escala_Grises(self , data=[]):
         try:
             img = self.ImagenRead(self.getImg_ruta())
@@ -255,11 +301,62 @@ class Imagen():
 #           "Tipo:",type(eval(cadena)))
 
 
+    #================================================#
+    #                   Usuario                        #
+    #================================================#
+    def Sobel_CSAAJel6(self, data=[]):
+        img = self.ImagenRead(self.getImg_ruta())
+        
+        # Numeros impares 
+        # Calculation of Sobelx
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
+        x = cv2.Sobel(gray, cv2.CV_64F, 1,0, ksize=3, scale=1)
+        y = cv2.Sobel(gray, cv2.CV_64F, 0,1, ksize=3, scale=1)
 
+        absx= cv2.convertScaleAbs(x)
+        absy = cv2.convertScaleAbs(y)
+        image = cv2.addWeighted(absx, 0.5, absy, 0.5,0)
+        
+        image_64_encode , ruta_img = self.ImagenWrite(image)
+        self.setEncodeImg([image_64_encode , ruta_img])
 
+    #================================================#
+    #                   Usuario                        #
+    #================================================#
+    def Sobel_2LEUlCk2(self, data=[]):
+        img = self.ImagenRead(self.getImg_ruta())
+        
+        # Numeros impares 
+        # Calculation of Sobelx
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
+        x = cv2.Sobel(gray, cv2.CV_64F, 1,0, ksize=3, scale=1)
+        y = cv2.Sobel(gray, cv2.CV_64F, 0,1, ksize=3, scale=1)
 
+        absx= cv2.convertScaleAbs(x)
+        absy = cv2.convertScaleAbs(y)
+        image = cv2.addWeighted(absx, 0.5, absy, 0.5,0)
+        
+        image_64_encode , ruta_img = self.ImagenWrite(image)
+        self.setEncodeImg([image_64_encode , ruta_img])
 
+    #================================================#
+    #                   Usuario                        #
+    #================================================#
+    def Sobel_RfI4DFe2(self, data=[]):
+        img = self.ImagenRead(self.getImg_ruta())
+        
+        # Numeros impares 
+        # Calculation of Sobelx
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
+        x = cv2.Sobel(gray, cv2.CV_64F, 1,0, ksize=3, scale=1)
+        y = cv2.Sobel(gray, cv2.CV_64F, 0,1, ksize=3, scale=1)
 
+        absx= cv2.convertScaleAbs(x)
+        absy = cv2.convertScaleAbs(y)
+        image = cv2.addWeighted(absx, 0.5, absy, 0.5,0)
+        
+        image_64_encode , ruta_img = self.ImagenWrite(image)
+        self.setEncodeImg([image_64_encode , ruta_img])

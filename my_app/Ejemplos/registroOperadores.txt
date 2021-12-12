@@ -10,5 +10,3 @@ GaussianBlur,[identificador,kernel],0,1
 Laplacian,[identificador],0
 MedianBlur,[identificador],0
 Sobel,[identificador],0
-Sobel_CSAAJel6,[identificador,d,sigmaColor],0,0,0
-Sobel_2LEUlCk2,[identificador,d,sigmaColor],0,0,0

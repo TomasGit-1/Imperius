@@ -14,6 +14,26 @@ def cargaConfig():
     except  Exception as e:
         print(e)
 
+def readAlgoritmo(path):
+    code=[]
+    with open(path, 'r') as f:
+        lineas = f.readlines()
+
+    for line in lineas:
+        code.append(line)
+    
+    return code
+        
+
+
+def GuardarAlgoritmo(path , data ):
+    with open(path, 'w') as f:
+        for item in data:
+            f.write(item)
+
+    return True
+
+
 def nameRandom(number_of_strings):
     number_of_strings = 5
     length_of_string = 8
@@ -69,3 +89,9 @@ def getOperator(ruta):
     with open(ruta , "r") as lines:
         file = lines.readlines()
     return file
+
+def RescribirOperator(ruta , lista):
+    file = []
+    with open(ruta , "w") as lines:
+        for i in lista:
+            file = lines.write(i)
